@@ -74,13 +74,28 @@ def add_sfh_posterior(fit, ax, colorscheme="bw", z_axis=True, zorder=4,
     # Plot the SFH
     x = age_of_universe - fit.posterior.sfh.ages*10**-9
 
-    ax.plot(x, post[:, 1], color=color1, zorder=zorder+1)
+    ax.plot(x, post[:, 1], color=color1, zorder=zorder+1,label="median")
     ax.fill_between(x, post[:, 0], post[:, 2], color=color2,
                     alpha=alpha, zorder=zorder, lw=0, label=label)
 
-    ax.set_ylim(0., np.max([ax.get_ylim()[1], 1.1*np.max(post[:, 2])]))
+    #plot the average SFH (for busts with unfixed age)
+    y=np.mean(fit.posterior.samples["sfh"],axis=0)
+    binning=10
+    lenx = len(x)
+    lenbinned=lenx//binning +1
+    x_binned=np.zeros(lenbinned)
+    y_binned=np.zeros(lenbinned)
+    for i in range (lenx//binning):
+        x_binned[i]=np.mean(x[binning*i:(i+1)*binning])
+        y_binned[i]=np.mean(y[binning*i:(i+1)*binning])
+    
+    ax.step(x_binned, y_binned, where='mid', color=color1, zorder=zorder+1,alpha=0.5,label="mean")
+    
     ax.set_xlim(age_of_universe, 0)
-
+    ax.set_ylim(0., np.max([ax.get_ylim()[1], 1.1*np.max(post[:, 2])]))
+    plt.legend(frameon=False)
+    #ax.set_yscale("log")
+    
     # Add redshift axis along the top
     if z_axis:
         ax2 = add_z_axis(ax, zvals=zvals)
