@@ -192,6 +192,13 @@ class fit(object):
             # This is necessary for converting large arrays to strings
             np.set_printoptions(threshold=10**7)
             file.attrs["fit_instructions"] = str(self.fit_instructions)
+            
+            max_likelihood_index = np.argmax(self.results["lnlike"])
+            self.fitted_model._update_model_components(fit.results["samples2d"][max_likelihood_index, :])
+            max_like_model_components = self.fitted_model.model_components
+
+            file.attrs["maxl_model"] = str(max_like_model_components)
+            file.attrs["parameter_names"] = str(self.fitted_model.params)
             np.set_printoptions(threshold=10**4)
 
             for k in self.results.keys():
@@ -236,9 +243,8 @@ class fit(object):
     def plot_1d_posterior(self, show=False, save=True):
         return plotting.plot_1d_posterior(self, show=show, save=save)
 
-    def plot_sfh_posterior(self, show=False, save=True, colorscheme="bw"):
-        return plotting.plot_sfh_posterior(self, show=show, save=save,
-                                           colorscheme=colorscheme)
+    def plot_sfh_posterior(self, show=False, save=True, log_scale=False, mean=False, colorscheme="bw"):
+        return plotting.plot_sfh_posterior(self, show, save, log_scale, mean, colorscheme)
 
     def plot_spectrum_posterior(self, show=False, save=True):
         return plotting.plot_spectrum_posterior(self, show=show, save=save)
