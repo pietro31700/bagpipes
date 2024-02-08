@@ -7,9 +7,8 @@ The custom branch present some changes from the original package:
 * In the h5 file are saved more information in the attributes:
     * :code:`<opened h5 file>.attrs["parameter_names"]` gives the ordered (as the samples2d in the same file) list of the names of the free parameters in the fit
     * :code:`<opened h5 file>.attrs["maxl_model"]` gives the ready-to-use complete model of the galaxy as fitted. It is a dictionary. Import it with 
-      .. code::
-
-        maxl_params = eval(<opened h5 file>.attrs['maxl_model'].replace("array", "np.array").replace("float", "np.float"))
+      
+      :code:`maxl_params = eval(<opened h5 file>.attrs['maxl_model'].replace("array", "np.array").replace("float", "np.float"))`
 
       The two :code:`replace` must be used when dealing with R_curve. Also :code: `<opened h5 file>.attrs["fitted_model"]`that contains the parameters of the fit with the priors selected should be opened in the same way
 
