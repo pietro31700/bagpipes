@@ -8,11 +8,16 @@ The custom branch present some changes from the original package:
     * :code:`<opened h5 file>.attrs["parameter_names"]` gives the ordered (as the samples2d in the same file) list of the names of the free parameters in the fit
     * :code:`<opened h5 file>.attrs["maxl_model"]` gives the ready-to-use complete model of the galaxy as fitted. It is a dictionary. Import it with 
       
-      :code:`maxl_params = eval(<opened h5 file>.attrs['maxl_model'].replace("array", "np.array").replace("float", "np.float"))`
+      :code:`maxl_params = eval(<opened h5 file>.attrs["maxl_model"].replace("array", "np.array").replace("float", "np.float"))`
 
-      The two :code:`replace` must be used when dealing with R_curve. Also :code: `<opened h5 file>.attrs["fitted_model"]`that contains the parameters of the fit with the priors selected should be opened in the same way
+      The two :code:`replace` must be used when dealing with R_curve. Also :code:`<opened h5 file>.attrs["fitted_model"]` that contains the parameters of the fit with the priors selected should be opened in the same way
 
-* When fitting the sfh you can select if also to plot the mean SFR value (instead of only the median SFR + 1σ CI) and if plot the SFH in log scale
+* When fitting the SFH you can select if also to plot the mean SFR value (instead of only the median SFR + 1σ CI) and if plot the SFH in log scale
+  For enabling the new options of :code:`plot_sfh_posterior` use:
+
+  :code:`plot_sfh_posterior(save=True,show=False,log_scale=True,mean=True)`
+
+  Any previous python file written fot the standard bagpipes package works as usual.
 
 **Installation**
 

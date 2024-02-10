@@ -18,7 +18,7 @@ negatively affects one or both of these things. """
 """ These variables control the wavelength sampling for models. """
 
 # Sets the maximum redshift the code is set up to calculate models for.
-max_redshift = 10.
+max_redshift = 13.
 
 # Sets the R = lambda/dlambda value for spectroscopic outputs.
 R_spec = 1000.
@@ -109,7 +109,7 @@ try:
     neb_wavs = fits.open(grid_dir + "/" + neb_cont_file)[1].data[0, 1:]
 
     # LogU values for the nebular emission grids.
-    logU = np.arange(-4., -1.99, 0.5)
+    logU = np.arange(-4., 1.0, 0.5)
 
     # Grid of line fluxes.
     line_grid = fits.open(grid_dir + "/" + neb_line_file)
