@@ -2,30 +2,49 @@
 
 Please refer to official documentation `bagpipes.readthedocs.io <http://bagpipes.readthedocs.io>`_. Last bagpipes version 1.0.4
 
-The custom branch present some changes from the original package:
 
+
+
+**The custom branch present some changes from the original package:**
+
+* The redshift for SFH is extended up to z=13 and the grids in the Mega archive are built for logU up to 0.5
 * In the h5 file are saved more information in the attributes:
     * :code:`<opened h5 file>.attrs["parameter_names"]` gives the ordered (as the samples2d in the same file) list of the names of the free parameters in the fit
     * :code:`<opened h5 file>.attrs["maxl_model"]` gives the ready-to-use complete model of the galaxy as fitted. It is a dictionary. Import it with 
       
-      :code:`maxl_params = eval(<opened h5 file>.attrs["maxl_model"].replace("array", "np.array").replace("float", "np.float"))`
+      .. code::
+         
+         maxl_params = eval(<opened h5 file>.attrs["maxl_model"].replace("array", "np.array").replace("float", "np.float"))
 
-      The two :code:`replace` must be used when dealing with R_curve. Also :code:`<opened h5 file>.attrs["fitted_model"]` that contains the parameters of the fit with the priors selected should be opened in the same way
+      The two :code:`replace` must be used when dealing with R_curve. Also :code:`<opened h5 file>.attrs["fitted_model"]` that contains the parameters of the fit with the priors selected should be opened in the same way.
 
 * When fitting the SFH you can select if also to plot the mean SFR value (instead of only the median SFR + 1σ CI) and if plot the SFH in log scale
-  For enabling the new options of :code:`plot_sfh_posterior` use:
+  :code:`plot_sfh_posterior` has two new boolean parameters: :code:`mean` and :code:`log_scale`. For enabling the new options use:
+  .. code::
 
-  :code:`plot_sfh_posterior(save=True,show=False,log_scale=True,mean=True)`
+      plot_sfh_posterior(save=True,show=False,log_scale=True,mean=True)
 
-  Any previous python file written fot the standard bagpipes package works as usual.
+  Any previous python file written for the standard bagpipes package works as usual.
 
 **Installation**
 
-Custom bagpipes must be installed as:
+If bagpipes was previously installed please uninstall it:
 
 .. code::
 
-    pip install bagpipes
+    pip uninstall bagpipes
+
+Custom bagpipes must be installed as (linux & mac):
+
+Go into the directory where you want to install the package, download this file:
+`Grids file <https://mega.nz/file/U65QWByS#WhU0ScTbRoO0wWeVt7ZAxJh9Iom_IOjGUV1RO2U6SCM>`_
+than run the following commands:
+.. code::
+
+    git clone https://github.com/pietro31700/bagpipes.git 
+    tar -xvf grids.tar.gz -C ./bagpipes/bagpipes/models/
+    pip install -e ./bagpipes/
+
 
 To fit models to data with the code you will also need to install the `MultiNest <https://github.com/JohannesBuchner/MultiNest>`_ code. For more information please see the `official bagpipes documentation <http://bagpipes.readthedocs.io>`_.
 
