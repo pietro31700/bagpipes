@@ -7,7 +7,7 @@ Please refer to official documentation `bagpipes.readthedocs.io <http://bagpipes
 
 **The custom branch present some changes from the original package:**
 
-* The redshift for SFH is extended up to z=13 and the grids in the Mega archive are built for logU up to 0.5
+* The grids are built for logU up to +0.5
 * In the h5 file are saved more information in the attributes:
     * :code:`<opened h5 file>.attrs["parameter_names"]` gives the ordered (as the samples2d in the same file) list of the names of the free parameters in the fit
     * :code:`<opened h5 file>.attrs["maxl_model"]` gives the ready-to-use complete model of the galaxy as fitted. It is a dictionary. Import it with 
