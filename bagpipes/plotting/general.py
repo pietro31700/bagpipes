@@ -286,7 +286,7 @@ def auto_axis_label(ax, y_scale, z_non_zero=True, log_x=False):
             ax.set_xlabel("lambda / A")
 
 
-def add_z_axis(ax, z_on_y=False, zvals=[0, 0.5, 1, 2, 4, 10]):
+def add_z_axis(ax, z_on_y=False, from_bigbang = True, zvals=[0, 0.5, 1, 2, 4, 10]):
 
     if z_on_y:
         ax2 = ax.twinx()
@@ -299,6 +299,9 @@ def add_z_axis(ax, z_on_y=False, zvals=[0, 0.5, 1, 2, 4, 10]):
         ax2.set_xticks(np.interp(zvals, utils.z_array, utils.age_at_z))
         ax2.set_xticklabels(["$" + str(z) + "$" for z in zvals])
         ax2.set_xlim(ax.get_xlim())
+        
+    if from_bigbang==False:
+        ax2.set_xlim(ax2.get_xlim()[::-1])
 
     if tex_on:
         if z_on_y:

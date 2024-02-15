@@ -15,7 +15,7 @@ from .. import utils
 from .. import config
 
 
-def plot_sfh_posterior(fit, show=False, save=True, log_scale=False, mean=False, colorscheme="bw"):
+def plot_sfh_posterior(fit, show=False, save=True, log_scale=False, mean=False, from_bigbang=False, colorscheme="bw"):
     """ Make a plot of the SFH posterior. """
 
     update_rcParams()
@@ -23,7 +23,7 @@ def plot_sfh_posterior(fit, show=False, save=True, log_scale=False, mean=False, 
     fig = plt.figure(figsize=(12, 4))
     ax = plt.subplot()
 
-    add_sfh_posterior(fit, ax, log_scale=log_scale,mean=mean,colorscheme=colorscheme)
+    add_sfh_posterior(fit, ax, log_scale=log_scale,mean=mean,colorscheme=colorscheme,from_bigbang=from_bigbang)
 
     if save:
         if log_scale==True:
@@ -40,8 +40,8 @@ def plot_sfh_posterior(fit, show=False, save=True, log_scale=False, mean=False, 
     return fig, ax
 
 
-def add_sfh_posterior(fit, ax, log_scale=False, mean=False, colorscheme="bw", z_axis=True, zorder=4,
-                      label=None, zvals=[0, 0.5, 1, 2, 4, 10]):
+def add_sfh_posterior(fit, ax, log_scale=False, mean=False, from_bigbang=False, colorscheme="bw", z_axis=True, zorder=4,
+                      label=None):
 
     color1 = "black"
     color2 = "gray"
@@ -75,8 +75,14 @@ def add_sfh_posterior(fit, ax, log_scale=False, mean=False, colorscheme="bw", z_
     post = np.percentile(fit.posterior.samples["sfh"], (16, 50, 84), axis=0).T
 
     # Plot the SFH
-    x = age_of_universe - fit.posterior.sfh.ages*10**-9
-
+    if from_bigbang:
+        x = age_of_universe - fit.posterior.sfh.ages*10**-9
+        ax.set_xlim(age_of_universe, 0)
+    else:
+        x = fit.posterior.sfh.ages*10**-9
+        ax.set_xlim(0,age_of_universe)
+        
+        
     ax.plot(x, post[:, 1], color=color1, zorder=zorder+1,label="Median")
     ax.fill_between(x, post[:, 0], post[:, 2], color=color2,
                     alpha=alpha, zorder=zorder, lw=0, label=label)
@@ -99,20 +105,27 @@ def add_sfh_posterior(fit, ax, log_scale=False, mean=False, colorscheme="bw", z_
     else:
         ax.set_ylim(0., np.max([ax.get_ylim()[1], 1.1*np.max(post[:, 2])]))
         
-    ax.set_xlim(age_of_universe, 0)
     plt.legend(frameon=False)
     # Add redshift axis along the top
     if z_axis:
-        ax2 = add_z_axis(ax, zvals=zvals)
+        zvals = [0,0.5,1,2,3,4,5,6,7,8,9,10,15,20,30]
+        ax2 = add_z_axis(ax, zvals=zvals, from_bigbang=from_bigbang)
 
     # Set axis labels
     if tex_on:
         ax.set_ylabel("$\\mathrm{SFR\\ /\\ M_\\odot\\ \\mathrm{yr}^{-1}}$")
-        ax.set_xlabel("$\\mathrm{Age\\ of\\ Universe\\ /\\ Gyr}$")
+        if from_bigbang:
+            ax.set_xlabel("$\\mathrm{Age\\ of\\ Universe\\ /\\ Gyr}$")
+        else:            
+            ax.set_xlabel("$\\mathrm{Lookback \\ time\\ /\\ Gyr}$")
 
     else:
         ax.set_ylabel("SFR / M_sol yr^-1")
-        ax.set_xlabel("Age of Universe / Gyr")
+        if from_bigbang:
+            ax.set_xlabel("Age of Universe / Gyr")
+        else:
+            ax.set_xlabel("Lookback time / Gyr")
+            
 
     if z_axis:
         return ax2

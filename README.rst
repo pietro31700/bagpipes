@@ -18,13 +18,20 @@ Please refer to official documentation `bagpipes.readthedocs.io <http://bagpipes
 
       The two :code:`replace` must be used when dealing with R_curve. Also :code:`<opened h5 file>.attrs["fitted_model"]` that contains the parameters of the fit with the priors selected should be opened in the same way.
 
-* When fitting the SFH you can select if also to plot the mean SFR value (instead of only the median SFR + 1σ CI) and if plot the SFH in log scale
-  :code:`plot_sfh_posterior` has two new boolean parameters: :code:`mean` and :code:`log_scale`. For enabling the new options use:
-  .. code::
+* When fitting the SFH
+    * you can select if also to plot the mean SFR value (instead of only the median SFR + 1σ CI) and if plot the SFH in log scale
+    :code:`plot_sfh_posterior` has two new boolean parameters: :code:`mean` and :code:`log_scale`. For enabling the new options use:
+    .. code::
 
-      plot_sfh_posterior(save=True,show=False,log_scale=True,mean=True)
+        plot_sfh_posterior(save=True,show=False,log_scale=True,mean=True)
+    
+    * By default the x-axis is written as time from the observed time of the galaxy. To revert this option use:
+    .. code::
 
-  Any previous python file written for the standard bagpipes package works as usual.
+        plot_sfh_posterior(save=True,show=False,from_bigbang=True)
+    Moreover, more redshift values are printed on the second x-axis o the SFH plot.
+
+Any previous python file written for the standard bagpipes package works as usual.
 
 **Installation**
 
