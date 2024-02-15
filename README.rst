@@ -36,14 +36,14 @@ If bagpipes was previously installed please uninstall it:
 
 Custom bagpipes must be installed as (linux & mac):
 
-Go into the directory where you want to install the package, download this file:
+Go into the directory where you want to install bagpipes, download this file:
 `Grids file <https://mega.nz/file/U65QWByS#WhU0ScTbRoO0wWeVt7ZAxJh9Iom_IOjGUV1RO2U6SCM>`_
 than run the following commands:
 .. code::
 
     git clone https://github.com/pietro31700/bagpipes.git 
     tar -xvf grids.tar.gz -C ./bagpipes/bagpipes/models/
-    pip install -e ./bagpipes/
+    pip install ./bagpipes/
 
 
 To fit models to data with the code you will also need to install the `MultiNest <https://github.com/JohannesBuchner/MultiNest>`_ code. For more information please see the `official bagpipes documentation <http://bagpipes.readthedocs.io>`_.

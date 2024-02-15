@@ -194,7 +194,7 @@ class fit(object):
             file.attrs["fit_instructions"] = str(self.fit_instructions)
             
             max_likelihood_index = np.argmax(self.results["lnlike"])
-            self.fitted_model._update_model_components(fit.results["samples2d"][max_likelihood_index, :])
+            self.fitted_model._update_model_components(self.results["samples2d"][max_likelihood_index, :])
             max_like_model_components = self.fitted_model.model_components
 
             file.attrs["maxl_model"] = str(max_like_model_components)
