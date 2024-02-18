@@ -21,13 +21,23 @@ def plot_corner(fit, show=False, save=True, bins=25, type="fit_params"):
 
     names = fit.fitted_model.params
     samples = np.copy(fit.posterior.samples2d)
-
+    
+    #print total mass formed for step function
+    if "step" in fit.fit_instructions.keys():
+        sfrs_indexes = [i for i in range(len(names)) if "sfr" in names[i]]
+        bin_edges = fit.fit_instructions["step"]["bin_edges"]
+        age_widths = np.diff(bin_edges)
+        mass_formed = np.log10(np.sum(age_widths*1.e6*samples[:,sfrs_indexes],axis=1))
+        
+        names.append("step:massformed")
+        samples = np.c_[samples,mass_formed]
+        
     # Set up axis labels
     if tex_on:
         labels = fix_param_names(names)
 
     else:
-        labels = fit.fitted_model.params
+        labels = names
 
     # Log any parameters with log_10 priors to make them easier to see
     for i in range(fit.fitted_model.ndim):

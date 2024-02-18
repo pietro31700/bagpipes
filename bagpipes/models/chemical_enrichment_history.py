@@ -16,14 +16,15 @@ class chemical_enrichment_history(object):
         self.grid_comp = {}
         self.grid = np.zeros((self.zmet_vals.shape[0],
                               config.age_sampling.shape[0]))
-
+        
         for comp in list(sfh_weights):
             if comp != "total":
                 self.grid_comp[comp] = self.delta(model_comp[comp],
                                                   sfh_weights[comp])
 
                 self.grid += self.grid_comp[comp]
-
+                
+    #never called
     def metallicity_bins(self, comp, sfh):
         bin_edges = np.array(comp["bin_edges"])[::-1]*10**6
         n_bins = len(bin_edges) - 1
@@ -53,7 +54,8 @@ class chemical_enrichment_history(object):
             grid[:, mask] = np.expand_dims(weights, axis=1)
 
         return grid*sfh
-
+    
+    #never called
     def metallicity_bins_continuity(self, comp, sfh):
         bin_edges = np.array(comp["bin_edges"])[::-1]*10**6
         n_bins = len(bin_edges) - 1

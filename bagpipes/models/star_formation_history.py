@@ -68,6 +68,11 @@ class star_formation_history:
 
         self.component_sfrs = {}  # SFR versus time for all components.
         self.component_weights = {}  # SSP weights for all components.
+        
+        #warn step users
+        if "step" in model_components.keys():
+            if "massformed" in model_components["step"].keys():
+                    print("\n#########\n\nWARNING: 'massformed' cannot be used with 'step'. It will be ignored\n\n#########\n")
 
         self._resample_live_frac_grid()
 
@@ -99,11 +104,14 @@ class star_formation_history:
             getattr(self, func)(self.component_sfrs[name],
                                 self.model_components[name])
 
-            # Normalise to the correct mass.
-            mass_norm = np.sum(self.component_sfrs[name]*self.age_widths)
-            desired_mass = 10**self.model_components[name]["massformed"]
+            #not normalise with step
+            if not name == "step":
+                # Normalise to the correct mass.
+                mass_norm = np.sum(self.component_sfrs[name]*self.age_widths)
+                desired_mass = 10**self.model_components[name]["massformed"]
 
-            self.component_sfrs[name] *= desired_mass/mass_norm
+                self.component_sfrs[name] *= desired_mass/mass_norm
+                
             self.sfh += self.component_sfrs[name]
 
             # Sum up contributions to each age bin to create SSP weights
@@ -330,7 +338,29 @@ class star_formation_history:
         for i in range(1, n_bins+1):
             mask = (self.ages < bin_edges[i-1]) & (self.ages > bin_edges[i])
             sfr[mask] += 10**np.sum(dsfrs[:i])
-
+            
+    def step(self, sfr, param):
+        bin_edges = np.array(param["bin_edges"])*10**6
+        n_bins = len(bin_edges) - 1
+        sfrs = [param["sfr" + str(i)] for i in range(1, n_bins+1)]
+        
+        for i in range(0,n_bins):
+            mask = (self.ages >= bin_edges[i]) & (self.ages < bin_edges[i+1])
+            sfr[mask] += sfrs[i]
+    
+    def relative_step(self, sfr, param):
+        '''the first bin is always 1 '''
+        bin_edges = np.array(param["bin_edges"])*10**6
+        n_bins = len(bin_edges) - 1
+        rsfrs = [param["rsfr" + str(i)] for i in range(1, n_bins)]
+        
+        for i in range(0,n_bins):
+            mask = (self.ages >= bin_edges[i]) & (self.ages < bin_edges[i+1])
+            if i==0:
+                sfr[mask] +=1
+            else:
+                sfr[mask] += rsfrs[i-1]
+            
     def custom(self, sfr, param):
         history = param["history"]
         if isinstance(history, str):
