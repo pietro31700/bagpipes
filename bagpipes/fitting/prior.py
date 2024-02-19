@@ -108,7 +108,21 @@ class prior(object):
         value = 1./np.sqrt((1./limits[1]**2 - 1./limits[0]**2)*value
                            + 1./limits[0]**2)
         return value
-
+    
+    def hyperbolic(self,value,limits,hyper_params):
+        """ Uniform prior in hyperbolic with specified eta: knee. 
+            Overpopulation of values under the knee than uniform"""
+        
+        eta = hyper_params["eta"]
+        
+        uniform_max=np.sqrt((limits[1]-limits[0]+eta)**2-eta**2)
+        value_normalised = value * uniform_max
+        
+        value = np.sqrt(eta**2+value_normalised**2)+limits[0]-eta
+        
+        return value
+        
+    
     def Gaussian(self, value, limits, hyper_params):
         """ Gaussian prior between limits with specified mu and sigma. """
         mu = hyper_params["mu"]
@@ -141,3 +155,12 @@ class prior(object):
         value = t.ppf(value, df=df, scale=scale)
 
         return value
+
+if __name__=="__main__":
+    xx=np.random.uniform(0,1,10000)
+
+    yy=prior.hyperbolic("",xx,[0.2,8],{"eta":2})
+    
+    from matplotlib import pyplot as plt
+    plt.hist(yy,50)
+    plt.show()
