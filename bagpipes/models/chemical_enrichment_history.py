@@ -93,22 +93,22 @@ class chemical_enrichment_history(object):
     def delta(self, comp, sfh):
         """ Delta function metallicity history. """
 
-        zmet = comp["metallicity"]
+        zmet = comp["metallicity"] #input value of metallicity for this sfh
 
         weights = np.zeros(self.zmet_vals.shape[0])
 
-        high_ind = self.zmet_vals[self.zmet_vals < zmet].shape[0]
+        high_ind = self.zmet_vals[self.zmet_vals < zmet].shape[0] #shape of the metallicity not bigger than zmet
 
-        if high_ind == self.zmet_vals.shape[0]:
+        if high_ind == self.zmet_vals.shape[0]: #if zmet is greater than the greatest value in self.zmet_vals
             weights[-1] = 1.
 
-        elif high_ind == 0:
+        elif high_ind == 0: #if zmet is smaller than the smallest value in self.zmet_vals
             weights[0] = 1.
 
         else:
             low_ind = high_ind - 1
             width = (self.zmet_vals[high_ind] - self.zmet_vals[low_ind])
-            weights[high_ind] = (zmet - self.zmet_vals[low_ind])/width
+            weights[high_ind] = (zmet - self.zmet_vals[low_ind])/width #linear interpolation
             weights[high_ind-1] = 1 - weights[high_ind]
 
         return np.expand_dims(weights, axis=1)*np.expand_dims(sfh, axis=0)

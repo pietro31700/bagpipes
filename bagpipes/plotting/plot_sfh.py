@@ -15,7 +15,7 @@ from .. import utils
 from .. import config
 
 
-def plot_sfh(sfh, show=True, save=False):
+def plot_sfh(sfh, show=True, save=False, from_bigbang=False):
     """ Make a quick plot of an individual sfh. """
 
     update_rcParams()
@@ -23,7 +23,7 @@ def plot_sfh(sfh, show=True, save=False):
     fig = plt.figure(figsize=(12, 4))
     ax = plt.subplot()
 
-    add_sfh(sfh, ax)
+    add_sfh(sfh, ax, from_bigbang=from_bigbang)
 
     if save:
         plt.savefig("model_sfh.pdf", bbox_inches="tight")
@@ -36,29 +36,41 @@ def plot_sfh(sfh, show=True, save=False):
     return fig, ax
 
 
-def add_sfh(sfh, ax, zorder=4, color="black", z_axis=True, lw=2,
-            zvals=[0, 0.5, 1, 2, 4, 10], alpha=1, ls="-", label=None):
+def add_sfh(sfh, ax, from_bigbang=False, zorder=4, color="black", z_axis=True, lw=2, alpha=1, ls="-", label=None):
     """ Creates a plot of sfr(t) for a given star-formation history. """
 
+    # Set limits and x
+    if from_bigbang:
+        x = (sfh.age_of_universe - sfh.ages)*10**-9
+        ax.set_xlim(sfh.age_of_universe*10**-9, 0)
+    else:
+        x = (sfh.ages)*10**-9
+        ax.set_xlim(0,sfh.age_of_universe*10**-9)
+    
     # Plot the sfh
-    ax.plot((sfh.age_of_universe - sfh.ages)*10**-9, sfh.sfh,
-            color=color, zorder=zorder, lw=lw, alpha=alpha, ls=ls, label=label)
-
-    # Set limits
-    ax.set_xlim(sfh.age_of_universe*10**-9, 0.)
+    ax.plot(x, sfh.sfh, color=color, zorder=zorder, lw=lw, alpha=alpha, ls=ls, label=label)
     ax.set_ylim(bottom=0.)
 
     # Add redshift axis along the top
     if z_axis:
-        z_axis = add_z_axis(ax, zvals=zvals)
+        zvals = [0,0.5,1,2,3,4,5,6,7,8,9,10,15,20,30]
+        z_axis = add_z_axis(ax, zvals=zvals, from_bigbang=from_bigbang)
 
     # Add labels
     if tex_on:
         ax.set_ylabel("$\\mathrm{SFR\\ /\\ M_\\odot\\ \\mathrm{yr}^{-1}}$")
-        ax.set_xlabel("$\\mathrm{Age\\ of\\ Universe\\ /\\ Gyr}$")
+        if from_bigbang:
+            ax.set_xlabel("$\\mathrm{Age\\ of\\ Universe\\ /\\ Gyr}$")
+        else:            
+            ax.set_xlabel("$\\mathrm{Lookback \\ time\\ /\\ Gyr}$")
 
     else:
         ax.set_ylabel("SFR / M_sol yr^-1")
-        ax.set_xlabel("Age of Universe / Gyr")
+        if from_bigbang:
+            ax.set_xlabel("Age of Universe / Gyr")
+        else:
+            ax.set_xlabel("Lookback time / Gyr")
+            
+
 
     return z_axis
