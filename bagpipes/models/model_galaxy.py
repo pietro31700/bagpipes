@@ -519,6 +519,24 @@ class model_galaxy(object):
         else:
             spectrum = self.spectrum_full
             redshifted_wavs = zplusone*self.wavelengths
+        
+        wavs_are_spec_wavs = False
+        
+        if "flux_sensitivity" in list(model_comp):
+            #You want to add noise to the spectrum
+            flux_sensitivity = model_comp["flux_sensitivity"]*1.e20
+            assert np.shape(flux_sensitivity)==np.shape(self.spec_wavs)
+            
+            spectrum = spectres.spectres(self.spec_wavs, redshifted_wavs,
+                                        spectrum, fill=0)
+            spectrum_err = np.random.normal(0,flux_sensitivity)/1.e20
+            spectrum=spectrum+spectrum_err
+            
+            redshifted_wavs=self.spec_wavs
+            
+            wavs_are_spec_wavs = True
+            
+                
 
         if "R_curve" in list(model_comp):
             oversample = 4  # Number of samples per FWHM at resolution R
@@ -526,7 +544,7 @@ class model_galaxy(object):
 
             # spectrum = np.interp(new_wavs, redshifted_wavs, spectrum)
             spectrum = spectres.spectres(new_wavs, redshifted_wavs,
-                                         spectrum, fill=0)
+                                         spectrum, fill=0, verbose=False)
             redshifted_wavs = new_wavs
 
             sigma_pix = oversample/2.35  # sigma width of kernel in pixels
@@ -539,13 +557,16 @@ class model_galaxy(object):
             # Disperse non-uniformly sampled spectrum
             spectrum = np.convolve(spectrum, kernel, mode="valid")
             redshifted_wavs = redshifted_wavs[k_size:-k_size]
+            
+            wavs_are_spec_wavs = False
 
         # Converted to using spectres in response to issue with interp,
         # see https://github.com/ACCarnall/bagpipes/issues/15
         # fluxes = np.interp(self.spec_wavs, redshifted_wavs,
         #                    spectrum, left=0, right=0)
-
-        fluxes = spectres.spectres(self.spec_wavs, redshifted_wavs,
+        
+        if not wavs_are_spec_wavs:
+            fluxes = spectres.spectres(self.spec_wavs, redshifted_wavs,
                                    spectrum, fill=0)
 
         if self.spec_units == "mujy":

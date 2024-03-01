@@ -34,7 +34,7 @@ Please refer to official documentation `bagpipes.readthedocs.io <http://bagpipes
 Any previous python file written for the standard bagpipes package works as usual.
 
 
-ADD STEP, RELATIVE_STEP, IPERB
+ADD STEP, RELATIVE_STEP, HYPERBOLIC, MAXL-plot, spec_err
 **Installation**
 
 If bagpipes was previously installed please uninstall it:

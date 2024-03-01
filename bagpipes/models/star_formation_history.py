@@ -1,6 +1,7 @@
 from __future__ import print_function, division, absolute_import
 
 import numpy as np
+from dataclasses import dataclass
 
 try:
     import dense_basis as db
@@ -31,7 +32,6 @@ def lognorm_equations(p, consts):
                - np.exp(-0.5*np.sqrt(8*np.log(2)*tau_solve**2))) - h
 
     return (tau, t0)
-
 
 class star_formation_history:
     """ Generate a star formation history.

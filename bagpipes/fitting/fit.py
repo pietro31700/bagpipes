@@ -108,13 +108,14 @@ class fit(object):
                 if np.sum(self.results[k].shape) == 1:
                     self.results[k] = self.results[k][0]
 
-            if rank == 0:
-                print("\nResults loaded from " + self.fname[:-1] + ".h5\n")
+            #if rank == 0:
+            print("\nResults loaded from " + self.fname[:-1] + ".h5\n")
 
         # Set up the model which is to be fitted to the data.
         self.fitted_model = fitted_model(galaxy, self.fit_instructions,
                                          time_calls=time_calls)
-
+        
+        
     def fit(self, verbose=False, n_live=400, use_MPI=True, sampler="multinest"):
         """ Fit the specified model to the input galaxy data.
 
@@ -243,8 +244,8 @@ class fit(object):
     def plot_1d_posterior(self, show=False, save=True):
         return plotting.plot_1d_posterior(self, show=show, save=save)
 
-    def plot_sfh_posterior(self, show=False, save=True, log_scale=False, mean=False, from_bigbang=False, colorscheme="bw"):
-        return plotting.plot_sfh_posterior(self, show, save, log_scale, mean, from_bigbang, colorscheme)
+    def plot_sfh_posterior(self, show=False, save=True, log_scale=False, mean=False, maxL=False, from_bigbang=False, colorscheme="bw"):
+        return plotting.plot_sfh_posterior(self, show, save, log_scale, mean, maxL, from_bigbang, colorscheme)
 
     def plot_spectrum_posterior(self, show=False, save=True):
         return plotting.plot_spectrum_posterior(self, show=show, save=save)
