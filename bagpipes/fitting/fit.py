@@ -244,8 +244,8 @@ class fit(object):
     def plot_1d_posterior(self, show=False, save=True):
         return plotting.plot_1d_posterior(self, show=show, save=save)
 
-    def plot_sfh_posterior(self, show=False, save=True, log_scale=False, mean=False, maxL=False, from_bigbang=False, colorscheme="bw"):
-        return plotting.plot_sfh_posterior(self, show, save, log_scale, mean, maxL, from_bigbang, colorscheme)
+    def plot_sfh_posterior(self, show=False, save=True, log_scale=False, mean=False, from_bigbang=False, colorscheme="bw"):
+        return plotting.plot_sfh_posterior(self, show, save, log_scale, mean, from_bigbang, colorscheme)
 
     def plot_spectrum_posterior(self, show=False, save=True):
         return plotting.plot_spectrum_posterior(self, show=show, save=save)

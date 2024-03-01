@@ -15,7 +15,7 @@ from .. import utils
 from .. import config
 
 
-def plot_sfh_posterior(fit, show=False, save=True, log_scale=False, mean=False, maxL=False, from_bigbang=False, colorscheme="bw"):
+def plot_sfh_posterior(fit, show=False, save=True, log_scale=False, mean=False,from_bigbang=False, colorscheme="bw"):
     """ Make a plot of the SFH posterior. """
 
     update_rcParams()
@@ -23,7 +23,7 @@ def plot_sfh_posterior(fit, show=False, save=True, log_scale=False, mean=False, 
     fig = plt.figure(figsize=(12, 4))
     ax = plt.subplot()
 
-    add_sfh_posterior(fit, ax, log_scale=log_scale,mean=mean,maxL=maxL,colorscheme=colorscheme,from_bigbang=from_bigbang)
+    add_sfh_posterior(fit, ax, log_scale=log_scale,mean=mean,colorscheme=colorscheme,from_bigbang=from_bigbang)
 
     if save:
         if log_scale==True:
@@ -40,7 +40,7 @@ def plot_sfh_posterior(fit, show=False, save=True, log_scale=False, mean=False, 
     return fig, ax
 
 
-def add_sfh_posterior(fit, ax, log_scale=False, mean=False, maxL =False, from_bigbang=False, colorscheme="bw", z_axis=True, zorder=4,
+def add_sfh_posterior(fit, ax, log_scale=False, mean=False, from_bigbang=False, colorscheme="bw", z_axis=True, zorder=4,
                       label=None):
 
     color1 = "black"
@@ -86,10 +86,10 @@ def add_sfh_posterior(fit, ax, log_scale=False, mean=False, maxL =False, from_bi
     ax.plot(x, post[:, 1], color=color1, zorder=zorder+1,label="Median")
     ax.fill_between(x, post[:, 0], post[:, 2], color=color2,
                     alpha=alpha, zorder=zorder, lw=0, label=label)
-    if maxL ==True:
-        max_likelihood_index = np.argmax(fit.results["lnlike"][fit.posterior.indices])
-        maxl_sfh   = fit.posterior.samples["sfh"][max_likelihood_index]
-        ax.plot(x, maxl_sfh, color="blue", alpha=0.5, zorder=zorder+1,label="MaxL")
+    #if maxL ==True:
+    #    max_likelihood_index = np.argmax(fit.results["lnlike"][fit.posterior.indices])
+    #    maxl_sfh   = fit.posterior.samples["sfh"][max_likelihood_index]
+    #    ax.plot(x, maxl_sfh, color="blue", alpha=0.5, zorder=zorder+1,label="MaxL")
         
     if mean ==True:
         mean_sfh = np.mean(fit.posterior.samples["sfh"],axis=0)
