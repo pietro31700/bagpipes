@@ -1,45 +1,98 @@
+.. role:: raw-math(raw)
+    :format: latex html
+
 Bayesian Analysis of Galaxies for Physical Inference and Parameter EStimation
 =============================================================================
 
 Please refer to official documentation `bagpipes.readthedocs.io <http://bagpipes.readthedocs.io>`_. Last bagpipes version 1.0.4
 
 
-
-
 The custom branch present the following changes from the original package:
 -------------------------------------------------------------------------
 
-* The grids are built for logU up to +0.5
-* The h5 file contains more information in the attributes:
-    + ``<h5 file>.attrs["parameter_names"]`` gives the ordered (as the samples2d in the same file) list of the names of the free parameters in the fit
-    + ``<h5 file>.attrs["maxl_model"]`` gives the ready-to-use complete model of the galaxy as fitted. It is a dictionary. Import it with:
++ The grids are built for logU up to +0.5
++ The h5 file contains more information in the attributes:
 
-      .. code-block:: python
+  + ``<h5 file>.attrs["parameter_names"]`` gives the ordered (as the samples2d in the same file) list of the names of the free parameters in the fit
+  + ``<h5 file>.attrs["maxl_model"]`` gives the ready-to-use complete model of the galaxy as fitted. It is a dictionary. Import it with:
 
-        maxl_params = eval(<h5 file>.attrs["maxl_model"].replace("array", "np.array").replace("float", "np.float"))
+    .. code-block:: python
 
-      The two ``replace`` must be used when dealing with R_curve. Also ``<h5 file>.attrs["fitted_model"]`` that contains the parameters of the fit with the priors selected should be opened in the same way.
-
-+ When fitting the SFH
-    + you can select if also to plot the mean SFR value (instead of only the median SFR + 1σ CI) and if plot the SFH in log scale
-      ``plot_sfh_posterior]`` has two new boolean parameters: ``mean`` and ``log_scale``. For enabling the new options use:
-
-      .. code-block:: python
-
-        plot_sfh_posterior(save=True,show=False,log_scale=True,mean=True)
+      maxl_params = eval(<h5 file>.attrs["maxl_model"].replace("array", "np.array").replace("float", "np.float"))
     
-    + By default the x-axis is written as time from the observed time of the galaxy. To revert this option use:
-      
+    The two ``replace`` must be used when dealing with R_curve. Also ``<h5 file>.attrs["fitted_model"]`` that contains the parameters of the fit with the priors selected should be opened in the same way.
+
++ When fitting the SFH:
+
+  + Two new SFH shapes are introduced:
+
+    + **step**: This is simply a step function with each step independent from the others. The steps edges are defined by you, than for each step you need to select the prior on the star formation rate. An example with uniform priors is the following
+
       .. code-block:: python
 
-        plot_sfh_posterior(save=True,show=False,from_bigbang=True)
+        step = {}
+        step["metallicity"] = (0.05,0.3)
+        step["metallicity_prior"] = "log_10"
+        step["bin_edges"] = [0,10,50,200,600] #Myr from the galaxy time looking behind
 
-      Moreover, more redshift values are printed on the second x-axis o the SFH plot.
+        for i in range(1, len(step["bin_edges"])):
+          # step["sfr1"] specifies the SFR of the bin closer to the galaxy time (new star formation)
+          step["sfr" + str(i)] = (0, 50)
+          step["sfr" + str(i) + "_prior"] = "uniform"
+
+      **Note**: Step is the only SFH shape that do not use the key "massformed". If specified it will be ignored. However, when *step* is used, in the corner plot the total mass formed is also displayed as a derived quantity.
+
+    + **relative_step**: This is similar to step, but each bin of star formation is relative to the SFR of the first bin (new star formation). In this case "massformed" is required as always
+
+      .. code-block:: python
+
+        rel_step = {}
+        rel_step["metallicity"] = (0.05,0.3)
+        rel_step["metallicity_prior"] = "log_10"
+        rel_step["bin_edges"] = [0,10,50,200,600] #Myr from the galaxy time looking behind
+
+        for i in range(1, len(step["bin_edges"])-1):
+          # rel_step["rsfr1"] specifies the SFR of the second bin 
+          # respect to the bin closer to the galaxy time (newest star formation)
+          rel_step["rsfr" + str(i)] = (0.5, 2)
+          rel_step["rsfr" + str(i) + "_prior"] = "uniform"
+
+  + A new prior has been introduced:
+
+    + "hyperbolic" can be used to overpopulate low values and keeping a flat distribution everywhere. "hyperbolic" has a parameter "eta" which select the *knee* of the distribution. Above this value the distribution is almost flat, below there are more occurences.
+
+      .. code-block:: python
+
+        step = {}
+        step["bin_edges"] = isolight_steps(n_bins=10,redshift=8,redshift_end=30)
+
+        for i in range(1, len(step["bin_edges"])):
+          step["sfr" + str(i)] = (0, 50)
+          step["sfr" + str(i) + "_prior"] = "hyperbolic"
+          step["sfr" + str(i) + "_prior_eta"] = 5
+
+      **Note**: In the case "eta" becomes many times larger than the prior width the distribution becomes a square root.
+
++ When plotting the SFH:
+
+  + you can select if also to plot the mean SFR value (instead of only the median SFR + 1σ CI) and if plot the SFH in log scale
+    ``plot_sfh_posterior]`` has two new boolean parameters: ``mean`` and ``log_scale``. For enabling the new options use:
+
+    .. code-block:: python
+
+      plot_sfh_posterior(save=True,show=False,log_scale=True,mean=True)
+    
+  + By default the x-axis is written as time from the observed time of the galaxy. To revert this option use:
+      
+    .. code-block:: python
+
+      plot_sfh_posterior(save=True,show=False,from_bigbang=True)
+
+    Moreover, more redshift values are printed on the second x-axis o the SFH plot.
 
 Any previous python file written for the standard bagpipes package works as usual.
 
-
-ADD STEP, RELATIVE_STEP, HYPERBOLIC, spec_err
+ADD spec_err
 
 Installation
 ------------
