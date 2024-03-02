@@ -59,7 +59,7 @@ The custom branch present the following changes from the original package:
 
   + A new prior has been introduced:
 
-    + "hyperbolic" can be used to overpopulate low values and keeping a flat distribution everywhere. "hyperbolic" has a parameter "eta" which select the *knee* of the distribution. Above this value the distribution is almost flat, below there are more occurences.
+    + "hyperbolic" can be used to overpopulate low values and keeping a flat distribution elsewhere. "hyperbolic" has a parameter "eta" which select the *knee* of the distribution. Above this value the distribution is almost flat, below there are more occurences.
 
       .. code-block:: python
 
