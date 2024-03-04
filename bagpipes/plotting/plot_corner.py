@@ -1,11 +1,9 @@
 from __future__ import print_function, division, absolute_import
 
 import numpy as np
-import copy
 
 try:
     import corner
-    import matplotlib as mpl
     import matplotlib.pyplot as plt
 
 except RuntimeError:
@@ -19,7 +17,7 @@ def plot_corner(fit, show=False, save=True, bins=25, type="fit_params"):
 
     update_rcParams()
 
-    names = fit.fitted_model.params
+    names = fit.fitted_model.params.copy()
     samples = np.copy(fit.posterior.samples2d)
     
     #print total mass formed for step function
