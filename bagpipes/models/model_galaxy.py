@@ -523,9 +523,12 @@ class model_galaxy(object):
         wavs_are_spec_wavs = False
         
         if "flux_sensitivity" in list(model_comp):
+            
+            wl_sensitivity = model_comp["flux_sensitivity"][:,0]
             #You want to add noise to the spectrum
-            flux_sensitivity = model_comp["flux_sensitivity"]*1.e20
-            assert np.shape(flux_sensitivity)==np.shape(self.spec_wavs)
+            flux_sensitivity = model_comp["flux_sensitivity"][:,1]*1.e20
+            
+            flux_sensitivity = np.interp(self.spec_wavs,wl_sensitivity,flux_sensitivity)
             
             spectrum = spectres.spectres(self.spec_wavs, redshifted_wavs,
                                         spectrum, fill=0)
