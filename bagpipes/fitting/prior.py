@@ -58,6 +58,25 @@ class prior(object):
         self.pdfs = pdfs
         self.hyper_params = hyper_params
         self.ndim = len(limits)
+        
+        #hierarchical models
+        self.hierarchical = [False]*self.ndim
+        
+        for i in range(self.ndim):
+            keys =self.hyper_params[i].keys()
+            for key in keys:
+                value = self.hyper_params[i][key]
+                if isinstance(value,str):
+                    "I have a hierarchical model"
+                    index_of_hier = int(value)
+                    assert index_of_hier < i
+                    try:
+                        self.hierarchical[i][key]=index_of_hier
+                    except:
+                        self.hierarchical[i]={}
+                        self.hierarchical[i][key]=index_of_hier
+                        
+                    
 
     def sample(self):
         """ Sample from the prior distribution. """
@@ -72,6 +91,12 @@ class prior(object):
         # Call the relevant prior functions to draw random values.
         for i in range(self.ndim):
             prior_function = getattr(self, self.pdfs[i])
+            if not self.hierarchical[i]==False:
+                "hierarchical model"
+                hierarchical_par = self.hierarchical[i]
+                for key in hierarchical_par.keys():
+                    self.hyper_params[i][key]=cube[hierarchical_par[key]]
+                
             cube[i] = prior_function(cube[i], self.limits[i],
                                      self.hyper_params[i])
 

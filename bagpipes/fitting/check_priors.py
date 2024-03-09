@@ -14,7 +14,7 @@ class check_priors:
 
     def __init__(self, fit_instructions, filt_list=None, spec_wavs=None,
                  n_draws=10000, phot_units="ergscma"):
-
+        '''
         self.fit_instructions = deepcopy(fit_instructions)
         self.model_components = deepcopy(fit_instructions)
         self.filt_list = filt_list
@@ -43,7 +43,8 @@ class check_priors:
             self.samples[self.params[i]] = self.samples2d[:, i]
 
         self.get_basic_quantities()
-
+        '''
+    '''
     def _process_fit_instructions(self):
         all_keys = []           # All keys in fit_instructions and subs
         all_vals = []           # All vals in fit_instructions and subs
@@ -213,3 +214,4 @@ class check_priors:
                     continue
 
                 self.samples[q][i] = getattr(self.model_galaxy, q)
+'''

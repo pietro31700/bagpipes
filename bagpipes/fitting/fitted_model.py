@@ -91,14 +91,24 @@ class fitted_model(object):
     
                     # Any hyper-parameters of these prior distributions.
                     self.hyper_params.append({})
-                    for i in range(len(all_keys)):
-                        if all_keys[i].startswith(prior_key + "_"):
-                            hyp_key = all_keys[i][len(prior_key)+1:]
-                            self.hyper_params[-1][hyp_key] = all_vals[i]
+                    for j in range(len(all_keys)):
+                        if all_keys[j].startswith(prior_key + "_"):
+                            hyp_key = all_keys[j][len(prior_key)+1:]
+                            hyp_value = all_vals[j]
+                            # check if any hyper-parameters mirror the value of a fit param (Hierarchical models)
+                            if isinstance(hyp_value,str):
+                                if not hyp_value in self.params:
+                                    raise Exception("Please sort hierarchical parameters from higher to lower level")
+                                hyp_index = self.params.index(hyp_value)
+                                hyp_value=str(hyp_index) #keep indexes in strings and value as float
+                            
+                            self.hyper_params[-1][hyp_key] = hyp_value
 
                 # Find any parameters which mirror the value of a fit param.
-                if all_vals[i] in all_keys:
-                    self.mirror_pars[all_keys[i]] = all_vals[i]
+                #exluced keys with "_prior_" in it to exlude hierarchical model's parameters
+                if not "_prior_" in all_keys[i]:
+                    if all_vals[i] in all_keys:
+                        self.mirror_pars[all_keys[i]] = all_vals[i]
     
                 if all_vals[i] == "dirichlet":
                     n = all_vals[all_keys.index(all_keys[i][:-6])]
@@ -271,6 +281,7 @@ class fitted_model(object):
         for key in list(self.mirror_pars):
             split_par = key.split(":")
             split_val = self.mirror_pars[key].split(":")
+            print(split_par,split_val)
             fit_val = self.model_components[split_val[0]][split_val[1]]
             self.model_components[split_par[0]][split_par[1]] = fit_val
 
