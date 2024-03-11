@@ -126,7 +126,7 @@ The custom branch present the following changes from the original package:
     Where wavelengths must be in Angstrom and sensitivity in erg/(s*AA*cm^2). If "R_curve" is also provided to the model, the noise is added to the spectrum and than convolved with "R_curve" specifications.
   
   + The new key "R_curve_multiplier" has been added to allow for target that do not completely fill the slit.
-    The R_curve provided is multiplied by this coefficient (probably it should be between 0 and 1)
+    The resolving power curve provided is multiplied by this coefficient (probably it should greater than 1)
 
 Any previous python file written for the standard bagpipes package works as usual.
 

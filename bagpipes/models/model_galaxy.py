@@ -243,7 +243,7 @@ class model_galaxy(object):
         R_curve = np.copy(self.model_comp["R_curve"])
         
         if "R_curve_multiplier" in list(self.model_comp):
-            R_curve[:,1]=R_curve[:,1]*model_comp["R_curve_multiplier"]
+            R_curve[:,1]=R_curve[:,1]*self.model_comp["R_curve_multiplier"]
 
         if "resolution_p0" in list(self.model_comp):
             x = R_curve[:, 0]
