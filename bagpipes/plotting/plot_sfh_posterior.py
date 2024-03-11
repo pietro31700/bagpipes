@@ -15,7 +15,7 @@ from .. import utils
 from .. import config
 
 
-def plot_sfh_posterior(fit, show=False, save=True, log_scale=False, mean=False,from_bigbang=False, colorscheme="bw"):
+def plot_sfh_posterior(fit, show=False, save=True, log_x=False, log_y=False, mean=False,from_bigbang=False, colorscheme="bw"):
     """ Make a plot of the SFH posterior. """
 
     update_rcParams()
@@ -23,13 +23,10 @@ def plot_sfh_posterior(fit, show=False, save=True, log_scale=False, mean=False,f
     fig = plt.figure(figsize=(12, 4))
     ax = plt.subplot()
 
-    add_sfh_posterior(fit, ax, log_scale=log_scale,mean=mean,colorscheme=colorscheme,from_bigbang=from_bigbang)
+    add_sfh_posterior(fit, ax, log_x=log_x, log_y=log_y, mean=mean,colorscheme=colorscheme,from_bigbang=from_bigbang)
 
     if save:
-        if log_scale==True:
-            plotpath = "pipes/plots/" + fit.run + "/" + fit.galaxy.ID + "_log_sfh.pdf"
-        else:
-            plotpath = "pipes/plots/" + fit.run + "/" + fit.galaxy.ID + "_sfh.pdf"
+        plotpath = "pipes/plots/" + fit.run + "/" + fit.galaxy.ID + "_sfh.pdf"            
         plt.savefig(plotpath, bbox_inches="tight")
         plt.close(fig)
 
@@ -40,7 +37,7 @@ def plot_sfh_posterior(fit, show=False, save=True, log_scale=False, mean=False,f
     return fig, ax
 
 
-def add_sfh_posterior(fit, ax, log_scale=False, mean=False, from_bigbang=False, colorscheme="bw", z_axis=True, zorder=4,
+def add_sfh_posterior(fit, ax, log_x=False, log_y=False, mean=False, from_bigbang=False, colorscheme="bw", z_axis=True, zorder=4,
                       label=None):
 
     color1 = "black"
@@ -73,14 +70,21 @@ def add_sfh_posterior(fit, ax, log_scale=False, mean=False, from_bigbang=False, 
 
     # Calculate median and confidence interval for SFH posterior
     post = np.percentile(fit.posterior.samples["sfh"], (16, 50, 84), axis=0).T
-
+    
+    
+    if log_x==True:
+        ax.set_xscale("log")
+        age_start = 1e-3
+    else:
+        age_start = 0
+        
     # Plot the SFH
     if from_bigbang:
         x = age_of_universe - fit.posterior.sfh.ages*10**-9
-        ax.set_xlim(age_of_universe, 0)
+        ax.set_xlim(age_of_universe, age_start)
     else:
         x = fit.posterior.sfh.ages*10**-9
-        ax.set_xlim(0,age_of_universe)
+        ax.set_xlim(age_start,age_of_universe)
         
         
     ax.plot(x, post[:, 1], color=color1, zorder=zorder+1,label="Median")
@@ -104,7 +108,7 @@ def add_sfh_posterior(fit, ax, log_scale=False, mean=False, from_bigbang=False, 
         ax.plot(x_binned,y_binned, color=color1, zorder=zorder+1,alpha = 0.5,label="Mean")
         
         
-    if log_scale==True:
+    if log_y==True:
         ax.set_yscale("log")
         ax.set_ylim(1e-2, np.max([ax.get_ylim()[1], 1.1*np.max(post[:, 2])]))
     else:

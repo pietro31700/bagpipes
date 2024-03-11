@@ -374,5 +374,5 @@ class star_formation_history:
 
         sfr[self.ages > self.age_of_universe] = 0.
 
-    def plot(self, show=True, save=False, from_bigbang=False):
-        return plotting.plot_sfh(self, show=show, save=save, from_bigbang=from_bigbang)
+    def plot(self, show=True, save=False, from_bigbang=False, log_x=False, log_y=False):
+        return plotting.plot_sfh(self, show=show, save=save, from_bigbang=from_bigbang, log_x=log_x, log_y=log_y)
