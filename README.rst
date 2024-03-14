@@ -128,7 +128,7 @@ The custom branch present the following changes from the original package:
   + The new key "R_curve_multiplier" has been added to increase the resolving power for target that do not completely fill the slit.
     The resolving power curve provided is multiplied by this coefficient (probably it should greater than 1). It can be also be left as a free parameter (WARNING: the fit can be slow). 
 
-    Note: "R_curve" use a gaussian PSF and defined two gaussian solved when separated by 1FWHM
+    Note: "R_curve" uses a gaussian PSF and two gaussian are defined to be solved when they are separated by 1FWHM
 
 Any previous python file written for the standard bagpipes package works as usual.
 
