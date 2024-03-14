@@ -34,7 +34,7 @@ To fit models to data with the code you will also need to install the `MultiNest
 The custom branch present the following changes from the original package:
 -------------------------------------------------------------------------
 
-+ The grids are built for logU up to +0.5
++ The grids are built for logU up to +0.5, and max_redshift=15
 
 + When fitting the SFH:
 
@@ -56,7 +56,7 @@ The custom branch present the following changes from the original package:
 
       **Note**: Step is the only SFH shape that do not use the key "massformed". If specified it will be ignored. However, when *step* is used, in the corner plot the total mass formed is also displayed as a derived quantity.
 
-    + **relative_step**: This is similar to step, but each bin of star formation is relative to the SFR of the first bin (new star formation). In this case "massformed" is required as always
+    + **relative_step**: This is similar to step, but each bin of star formation is relative to the SFR of the first bin (the newest star formation). In this case "massformed" is required as always
 
       .. code-block:: python
 
@@ -67,13 +67,13 @@ The custom branch present the following changes from the original package:
 
         for i in range(1, len(step["bin_edges"])-1):
           # rel_step["rsfr1"] specifies the SFR of the second bin 
-          # respect to the bin closer to the galaxy time (newest star formation)
+          # respect to the "0th" bin: the one closer to the galaxy time (newest star formation)
           rel_step["rsfr" + str(i)] = (0.5, 2)
           rel_step["rsfr" + str(i) + "_prior"] = "uniform"
 
   + A new prior has been introduced:
 
-    + "hyperbolic" can be used to overpopulate low values and keeping a flat distribution elsewhere. "hyperbolic" has a parameter "eta" which select the *knee* of the distribution. Above this value the distribution is almost flat, below there are more occurences.
+    + "hyperbolic" can be used to overpopulate low values and keeping a flat distribution elsewhere. "hyperbolic" has a parameter "eta" which select the *knee* of the distribution. Above this value the distribution is almost flat, below there are more occurrences.
 
       .. code-block:: python
 
@@ -89,14 +89,14 @@ The custom branch present the following changes from the original package:
 
 + When plotting the SFH:
 
-  + you can select if also to plot the mean SFR value (instead of only the median SFR + 1σ CI) and if plot the SFH in log scale
+  + you can select if also to plot the mean SFR value (instead of only the median SFR + 1σ CI) and if plot the SFH in log scale (both x and y axis)
     ``plot_sfh_posterior]`` has two new boolean parameters: ``mean`` and ``log_scale``. For enabling the new options use:
 
     .. code-block:: python
 
-      plot_sfh_posterior(save=True,show=False,log_scale=True,mean=True)
+      plot_sfh_posterior(save=True,show=False,log_x=True,log_y=True,mean=True)
     
-  + By default the x-axis is written as time from the observed time of the galaxy. To revert this option use:
+  + By default the x-axis is written as lookback time from the time of the galaxy. To revert this option use:
       
     .. code-block:: python
 
@@ -126,7 +126,9 @@ The custom branch present the following changes from the original package:
     Where wavelengths must be in Angstrom and sensitivity in erg/(s*AA*cm^2). If "R_curve" is also provided to the model, the noise is added to the spectrum and than convolved with "R_curve" specifications.
   
   + The new key "R_curve_multiplier" has been added to allow for target that do not completely fill the slit.
-    The resolving power curve provided is multiplied by this coefficient (probably it should greater than 1)
+    The resolving power curve provided is multiplied by this coefficient (probably it should greater than 1). It can be also be left as a free parameter (this can be slow). 
+
+    Note: "R_curve" use the definition of resolving power as gaussian PSF separated by 1FWHM
 
 Any previous python file written for the standard bagpipes package works as usual.
 

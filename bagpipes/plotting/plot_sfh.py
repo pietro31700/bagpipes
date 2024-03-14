@@ -65,7 +65,7 @@ def add_sfh(sfh, ax, from_bigbang=False, zorder=4, color="black", z_axis=True, l
     # Add redshift axis along the top
     if z_axis:
         zvals = [0,0.5,1,2,3,4,5,6,7,8,9,10,15,20,30]
-        z_axis = add_z_axis(ax, zvals=zvals, from_bigbang=from_bigbang)
+        z_axis = add_z_axis(ax, zvals=zvals, from_bigbang=from_bigbang,log_scale=log_x)
         
     if not label==None:
         ax.legend(frameon=False)

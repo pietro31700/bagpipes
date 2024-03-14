@@ -287,22 +287,40 @@ def auto_axis_label(ax, y_scale, z_non_zero=True, log_x=False):
             ax.set_xlabel("lambda / A")
 
 
-def add_z_axis(ax, z_on_y=False, from_bigbang = True, zvals=[0, 0.5, 1, 2, 4, 10]):
-
+def add_z_axis(ax, z_on_y=False, from_bigbang = True, redshift=None, zvals=[0, 0.5, 1, 2, 4, 10], log_scale=True):
+    
+    z_vals_minors=np.append(np.arange(0,1,0.1),np.arange(1,30,1))
+    
     if z_on_y:
         ax2 = ax.twinx()
-        ax2.set_yticks(np.interp(zvals, utils.z_array, utils.age_at_z))
+        if log_scale:
+            ax2.set_yscale("log")
+        ticks = np.interp(zvals, utils.z_array, utils.age_at_z)
+        ticks_minors = np.interp(z_vals_minors, utils.z_array, utils.age_at_z)
+        if from_bigbang==False:
+            ticks=ax.get_ylim()[1]-ticks
+            ticks_minors=ax.get_ylim()[1]-ticks_minors
+        ax2.set_yticks(ticks)
+        ax2.set_yticks(ticks_minors,minor=True)
         ax2.set_yticklabels(["$" + str(z) + "$" for z in zvals])
+        ax2.set_yticklabels([],minor=True)
         ax2.set_ylim(ax.get_ylim())
 
     else:
         ax2 = ax.twiny()
-        ax2.set_xticks(np.interp(zvals, utils.z_array, utils.age_at_z))
+        if log_scale:
+            ax2.set_xscale("log")
+        ticks = np.interp(zvals, utils.z_array, utils.age_at_z)
+        ticks_minors = np.interp(z_vals_minors, utils.z_array, utils.age_at_z)
+        if from_bigbang==False:
+            ticks=ax.get_xlim()[1]-ticks
+            ticks_minors=ax.get_xlim()[1]-ticks_minors
+        ax2.set_xticks(ticks)
+        ax2.set_xticks(ticks_minors,minor=True)
         ax2.set_xticklabels(["$" + str(z) + "$" for z in zvals])
+        ax2.set_xticklabels([],minor=True)
         ax2.set_xlim(ax.get_xlim())
         
-    if from_bigbang==False:
-        ax2.set_xlim(ax2.get_xlim()[::-1])
 
     if tex_on:
         if z_on_y:
@@ -313,7 +331,7 @@ def add_z_axis(ax, z_on_y=False, from_bigbang = True, zvals=[0, 0.5, 1, 2, 4, 10
 
     else:
         if z_on_y:
-            ax2.set_xlabel("Redshift")
+            ax2.set_ylabel("Redshift")
 
         else:
             ax2.set_xlabel("Redshift")

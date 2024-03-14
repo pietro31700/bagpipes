@@ -98,14 +98,14 @@ def add_sfh_posterior(fit, ax, log_x=False, log_y=False, mean=False, from_bigban
     if mean ==True:
         mean_sfh = np.mean(fit.posterior.samples["sfh"],axis=0)
         
-        binning=5
-        len_binned = len(x)//binning
-        x_binned = np.zeros(len_binned)
-        y_binned = np.zeros(len_binned)
-        for ii in range(len_binned):
-            x_binned[ii] = np.mean(x[binning*ii:binning*(ii+1)])      
-            y_binned[ii] = np.mean(mean_sfh[binning*ii:binning*(ii+1)])      
-        ax.plot(x_binned,y_binned, color=color1, zorder=zorder+1,alpha = 0.5,label="Mean")
+        #binning=5
+        #len_binned = len(x)//binning
+        #x_binned = np.zeros(len_binned)
+        #y_binned = np.zeros(len_binned)
+        #for ii in range(len_binned):
+        #    x_binned[ii] = np.mean(x[binning*ii:binning*(ii+1)])      
+        #    y_binned[ii] = np.mean(mean_sfh[binning*ii:binning*(ii+1)])      
+        ax.plot(x,mean_sfh, color=color1, zorder=zorder+1,alpha = 0.5,label="Mean")
         
         
     if log_y==True:
@@ -118,7 +118,7 @@ def add_sfh_posterior(fit, ax, log_x=False, log_y=False, mean=False, from_bigban
     # Add redshift axis along the top
     if z_axis:
         zvals = [0,0.5,1,2,3,4,5,6,7,8,9,10,15,20,30]
-        ax2 = add_z_axis(ax, zvals=zvals, from_bigbang=from_bigbang)
+        ax2 = add_z_axis(ax, zvals=zvals, from_bigbang=from_bigbang, log_scale=log_x)
 
     # Set axis labels
     if tex_on:
