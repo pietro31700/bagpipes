@@ -90,7 +90,7 @@ The custom branch present the following changes from the original package:
 + When plotting the SFH:
 
   + you can select if also to plot the mean SFR value (instead of only the median SFR + 1σ CI) and if plot the SFH in log scale (both x and y axis)
-    ``plot_sfh_posterior]`` has two new boolean parameters: ``mean`` and ``log_scale``. For enabling the new options use:
+    ``plot_sfh_posterior]`` has three new boolean parameters: ``mean``, ``log_x`` and ``log_y``. For enabling the new options use:
 
     .. code-block:: python
 
@@ -125,8 +125,8 @@ The custom branch present the following changes from the original package:
 
     Where wavelengths must be in Angstrom and sensitivity in erg/(s*AA*cm^2). If "R_curve" is also provided to the model, the noise is added to the spectrum and than convolved with "R_curve" specifications.
   
-  + The new key "R_curve_multiplier" has been added to allow for target that do not completely fill the slit.
-    The resolving power curve provided is multiplied by this coefficient (probably it should greater than 1). It can be also be left as a free parameter. 
+  + The new key "R_curve_multiplier" has been added to increase the resolving power for target that do not completely fill the slit.
+    The resolving power curve provided is multiplied by this coefficient (probably it should greater than 1). It can be also be left as a free parameter.
 
 
 Any previous python file written for the standard bagpipes package works as usual.
