@@ -34,7 +34,7 @@ To fit models to data with the code you will also need to install the `MultiNest
 The custom branch present the following changes from the original package:
 -------------------------------------------------------------------------
 
-+ The grids are built for logU up to +0.5, and max_redshift=15
++ The grids are built for logU up to +0.5, and max_redshift=15. Downloading the bpass grids you can use them only changing the variable "BPASS" at the beginning of the config.py file
 
 + When fitting the SFH:
 
@@ -126,9 +126,8 @@ The custom branch present the following changes from the original package:
     Where wavelengths must be in Angstrom and sensitivity in erg/(s*AA*cm^2). If "R_curve" is also provided to the model, the noise is added to the spectrum and than convolved with "R_curve" specifications.
   
   + The new key "R_curve_multiplier" has been added to allow for target that do not completely fill the slit.
-    The resolving power curve provided is multiplied by this coefficient (probably it should greater than 1). It can be also be left as a free parameter (this can be slow). 
+    The resolving power curve provided is multiplied by this coefficient (probably it should greater than 1). It can be also be left as a free parameter. 
 
-    Note: "R_curve" use the definition of resolving power as gaussian PSF separated by 1FWHM
 
 Any previous python file written for the standard bagpipes package works as usual.
 
