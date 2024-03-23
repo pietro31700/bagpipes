@@ -13,6 +13,13 @@ from ..model_galaxy import model_galaxy
 
 if "CLOUDY_DATA_PATH" in list(os.environ):
     cloudy_data_path = os.environ["CLOUDY_DATA_PATH"]
+else :
+    cloudy_data_path = "/home/pbenotto/cloudy/data"
+
+if "CLOUDY_EXE" in list(os.environ):
+    cludy_exe = os.environ["CLOUDY_EXE"]
+else:
+    cloudy_exe = "/home/pbenotto/cloudy/source/cloudy.exe"
 
 try:
     from mpi4py import MPI
@@ -145,6 +152,8 @@ def make_cloudy_input_file(age, zmet, logU, path):
     if not os.path.exists(cloudy_data_path + "/pipes_cloudy_lines.txt"):
         os.system("cp " + utils.install_dir + "/models/grids/cloudy_lines.txt "
                   + cloudy_data_path + "/pipes_cloudy_lines.txt")
+        if not os.path.exists(cloudy_data_path + "/pipes_cloudy_lines.txt"):
+            raise("cloudy_lines are not present! Aborting")
 
     logQ = np.log10(4*np.pi*(10.**19)**2*100*2.9979*10**10*10**logU)
 
@@ -214,7 +223,7 @@ def run_cloudy_model(age, zmet, logU, path):
     os.chdir(path + "/cloudy_temp_files/"
              + "logU_" + "%.1f" % logU + "_zmet_" + "%.3f" % zmet)
 
-    os.system(os.environ["CLOUDY_EXE"] + " -r " + "%.5f" % age)
+    os.system(cloudy_exe + " -r " + "%.5f" % age)
     os.chdir("../../..")
 
 

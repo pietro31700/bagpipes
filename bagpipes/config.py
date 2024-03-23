@@ -139,7 +139,7 @@ try:
 
     # LogU values for the nebular emission grids.
     if BPASS:
-        logU = np.arange(-4., -0.99, 0.5)
+        logU = np.arange(-4., 1.0, 0.5)
     else:
         logU = np.arange(-4., 1.0, 0.5)
 
