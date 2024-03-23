@@ -14,12 +14,12 @@ from ..model_galaxy import model_galaxy
 if "CLOUDY_DATA_PATH" in list(os.environ):
     cloudy_data_path = os.environ["CLOUDY_DATA_PATH"]
 else :
-    cloudy_data_path = "/home/pbenotto/cloudy/data"
+    cloudy_data_path = "/home/pbenotto/c23.01/data"
 
 if "CLOUDY_EXE" in list(os.environ):
     cludy_exe = os.environ["CLOUDY_EXE"]
 else:
-    cloudy_exe = "/home/pbenotto/cloudy/source/cloudy.exe"
+    cloudy_exe = "/home/pbenotto/c23.01/source/cloudy.exe"
 
 try:
     from mpi4py import MPI
