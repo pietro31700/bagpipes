@@ -117,8 +117,8 @@ models, as well as some of their basic properties. """
 try:
     # Names of files containing the nebular grids.
     if BPASS:
-        neb_cont_file = "bpass_2.2.1_bin_imf135_300_nebular_cont_grids.fits"
-        neb_line_file = "bpass_2.2.1_bin_imf135_300_nebular_line_grids.fits"
+        neb_cont_file = "bpass_nebular_cont_grids.fits"
+        neb_line_file = "bpass_nebular_line_grids.fits"
     else:
         neb_cont_file = "bc03_miles_nebular_cont_grids.fits"
         neb_line_file = "bc03_miles_nebular_line_grids.fits"
