@@ -155,7 +155,7 @@ def make_cloudy_input_file(age, zmet, logU, path):
         if not os.path.exists(cloudy_data_path + "/pipes_cloudy_lines.txt"):
             raise("cloudy_lines are not present! Aborting")
 
-    logQ = np.log10(4*np.pi*(10.**19)**2*100*2.9979*10**10*10**logU)
+    logQ = np.log10(4*np.pi*(10.**19)**2*config.electron_density*2.9979*10**10*10**logU)
 
     f = open(path + "/cloudy_temp_files/logU_" + "%.1f" % logU
              + "_zmet_" + "%.3f" % zmet + "/" + "%.5f" % age + ".in", "w+")
@@ -171,7 +171,7 @@ def make_cloudy_input_file(age, zmet, logU, path):
     f.write("##### Geometry and physical conditions #####\n")
     f.write("sphere\n")
     f.write("cosmic rays background\n")
-    f.write("hden 2.000 log\n")
+    f.write("hden "+str("%.3f" % np.log10(config.electron_density)) + " log\n")
     f.write("Q(H) = " + str("%.3f" % logQ) + " log\n")
     f.write("radius 19.000 log\n")
     f.write("abundances old solar 84\n")

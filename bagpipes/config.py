@@ -69,7 +69,10 @@ try:
     else:
         stellar_file = "bc03_miles_stellar_grids.fits"
         
-
+    if BPASS:
+        electron_density = 1000 #cm^-3, H-alpha density
+    else:
+        electron_density = 100 #cm^-3, H-alpha density
 
     # The metallicities of the stellar grids in units of Z_Solar
     if BPASS:
