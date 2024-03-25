@@ -34,7 +34,9 @@ To fit models to data with the code you will also need to install the `MultiNest
 The custom branch present the following changes from the original package:
 -------------------------------------------------------------------------
 
-+ The grids are built for logU up to +0.5, and max_redshift=15. Downloading the bpass grids you can use them only changing the variable "BPASS" at the beginning of the config.py file
++ The nebular grids are built for logU up to +0.5, and max_redshift=15.
+
++ You can use BPASS changing the variable BPASS to True in te config.py file before the installation. If you want to change the model after the installation, you need to first delete the file models/grids/d_igm_grid_inoue14.fits. In this way the absorption grids will be built again. Even for Bpass the nebular grids are built for logU up to +0.5
 
 + When fitting the SFH:
 
