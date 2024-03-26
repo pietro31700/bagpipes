@@ -296,13 +296,13 @@ def compile_cloudy_grid(path):
                 if not os.path.exists(path + "/cloudy_temp_files/grids"):
                     os.mkdir(path + "/cloudy_temp_files/grids")
                 
-                linepath = path + "/cloudy_temp_files/grids/" 
-                + "zmet_" + str(zmet) + "_logU_" + str(logU) + "_density_" + str(density)
-                + ".neb_lines"
+                linepath = path + "/cloudy_temp_files/grids/"\
+                    + "zmet_" + str(zmet) + "_logU_" + str(logU) + "_density_" + str(density)\
+                    + ".neb_lines"
                 
-                contpath = path + "/cloudy_temp_files/grids/"
-                + "zmet_" + str(zmet) + "_logU_" + str(logU) + "_density_" + str(density)
-                + ".neb_cont"
+                contpath = path + "/cloudy_temp_files/grids/"\
+                    + "zmet_" + str(zmet) + "_logU_" + str(logU) + "_density_" + str(density)\
+                    + ".neb_cont"
                 
                 if not (os.path.exists(linepath)  and os.path.exists(contpath)):
 
