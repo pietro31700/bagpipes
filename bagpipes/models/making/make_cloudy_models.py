@@ -215,14 +215,21 @@ def make_cloudy_input_file(age, zmet, logU, density, path):
 
 def run_cloudy_model(age, zmet, logU, density, path):
     """ Run an individual cloudy model. """
+    filename = path + "/cloudy_temp_files/"\
+                             + "density_" + "%.0f" % density\
+                             + "/"\
+                             + "logU_" + "%.1f" % logU + "_zmet_"\
+                             + "%.3f" % zmet + "/" + "%.5f" % age + ".econ"
+                             
+    if not os.path.exists(filename):
 
-    make_cloudy_sed_file(age, zmet)
-    make_cloudy_input_file(age, zmet, logU, density, path)
-    os.chdir(path + "/cloudy_temp_files/"+ "density_" + "%.0f" % density + "/"
-             + "logU_" + "%.1f" % logU + "_zmet_" + "%.3f" % zmet)
+        make_cloudy_sed_file(age, zmet)
+        make_cloudy_input_file(age, zmet, logU, density, path)
+        os.chdir(path + "/cloudy_temp_files/"+ "density_" + "%.0f" % density + "/"
+                + "logU_" + "%.1f" % logU + "_zmet_" + "%.3f" % zmet)
 
-    os.system(cloudy_exe + " -r " + "%.5f" % age)
-    os.chdir("../../..")
+        os.system(cloudy_exe + " -r " + "%.5f" % age)
+        os.chdir("../../..")
 
 
 def extract_cloudy_results(age, zmet, logU, density, path):
