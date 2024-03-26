@@ -59,7 +59,6 @@ class nebular(object):
                         + i
                         + 1
                     )
-                    
                     raw_cont_grid = config.cont_grid[hdu_index].data
                     raw_line_grid = config.line_grid[hdu_index].data
 
@@ -185,11 +184,11 @@ class nebular(object):
                 )
 
                 sfh_ceh[:, index - 1] /= weight
-
+            print(density_weight,logU_weight)
         spectrum = (
-            spectrum_low_logU_low_density * (1 - logU_weight) * (1 - density_weight)
-            + spectrum_low_logU_high_density * (1 - logU_weight) * density_weight
-            + spectrum_high_logU_low_density * logU_weight * (1 - density_weight)
-            + spectrum_high_logU_high_density * logU_weight * density_weight
+            spectrum_low_logU_low_density *logU_weight * density_weight
+            + spectrum_low_logU_high_density * logU_weight * (1-density_weight)
+            + spectrum_high_logU_low_density * (1-logU_weight) * density_weight
+            + spectrum_high_logU_high_density * (1-logU_weight) * (1-density_weight)
         )
         return spectrum
