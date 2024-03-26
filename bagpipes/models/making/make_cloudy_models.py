@@ -293,43 +293,50 @@ def compile_cloudy_grid(path):
     for density in config.densities:
         for logU in config.logU:
             for zmet in config.metallicities:
-
-                print("n_e: " + str(np.round(density,0))
-                    + ", logU: " + str(np.round(logU, 1))
-                    + ", zmet: " + str(np.round(zmet, 4)))
-
-                mask = (config.age_sampling < age_lim)
-                contgrid = np.zeros((config.age_sampling[mask].shape[0]+1,
-                                    config.wavelengths.shape[0]+1))
-
-                contgrid[0, 1:] = config.wavelengths
-                contgrid[1:, 0] = config.age_sampling[config.age_sampling < age_lim]
-
-                linegrid = np.zeros((config.age_sampling[mask].shape[0]+1,
-                                    line_wavs.shape[0]+1))
-
-                linegrid[0, 1:] = line_wavs
-                linegrid[1:, 0] = config.age_sampling[mask]
-
-                for i in range(config.age_sampling[mask].shape[0]):
-                    age = config.age_sampling[mask][i]
-                    cont_fluxes, line_fluxes = extract_cloudy_results(age*10**-9,
-                                                                    zmet, logU, density,
-                                                                    path)
-
-                    contgrid[i+1, 1:] = cont_fluxes
-                    linegrid[i+1, 1:] = line_fluxes
-
                 if not os.path.exists(path + "/cloudy_temp_files/grids"):
                     os.mkdir(path + "/cloudy_temp_files/grids")
+                
+                linepath = path + "/cloudy_temp_files/grids/" 
+                + "zmet_" + str(zmet) + "_logU_" + str(logU) + "_density_" + str(density)
+                + ".neb_lines"
+                
+                contpath = path + "/cloudy_temp_files/grids/"
+                + "zmet_" + str(zmet) + "_logU_" + str(logU) + "_density_" + str(density)
+                + ".neb_cont"
+                
+                if not (os.path.exists(linepath)  and os.path.exists(contpath)):
 
-                np.savetxt(path + "/cloudy_temp_files/grids/"
-                        + "zmet_" + str(zmet) + "_logU_" + str(logU) + "_density_" + str(density)
-                        + ".neb_lines", linegrid)
+                    print("n_e: " + str(np.round(density,0))
+                        + ", logU: " + str(np.round(logU, 1))
+                        + ", zmet: " + str(np.round(zmet, 4)))
 
-                np.savetxt(path + "/cloudy_temp_files/grids/"
-                        + "zmet_" + str(zmet) + "_logU_" + str(logU) + "_density_" + str(density)
-                        + ".neb_cont", contgrid)
+                    mask = (config.age_sampling < age_lim)
+                    contgrid = np.zeros((config.age_sampling[mask].shape[0]+1,
+                                        config.wavelengths.shape[0]+1))
+
+                    contgrid[0, 1:] = config.wavelengths
+                    contgrid[1:, 0] = config.age_sampling[config.age_sampling < age_lim]
+
+                    linegrid = np.zeros((config.age_sampling[mask].shape[0]+1,
+                                        line_wavs.shape[0]+1))
+
+                    linegrid[0, 1:] = line_wavs
+                    linegrid[1:, 0] = config.age_sampling[mask]
+
+                    for i in range(config.age_sampling[mask].shape[0]):
+                        age = config.age_sampling[mask][i]
+                        cont_fluxes, line_fluxes = extract_cloudy_results(age*10**-9,
+                                                                        zmet, logU, density,
+                                                                        path)
+
+                        contgrid[i+1, 1:] = cont_fluxes
+                        linegrid[i+1, 1:] = line_fluxes
+
+                    
+
+                    np.savetxt(linepath, linegrid)
+
+                    np.savetxt(contpath, contgrid)
 
     # Nebular grids
     list_of_hdus_lines = [fits.PrimaryHDU()]
