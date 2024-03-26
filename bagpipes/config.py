@@ -58,6 +58,12 @@ age_widths = age_bins[1:] - age_bins[:-1]
 # Convert the age sampling from log10(Gyr) to Gyr.
 age_sampling = 10**age_sampling
 
+"""This variable tell at which density build new nebular grids (it requires cloudy)"""
+if BPASS:
+    electron_density = 1000 #cm^-3, H-alpha density
+else:
+    electron_density = 100 #cm^-3, H-alpha density
+
 
 """ These variables tell the code where to find the raw stellar emission
 models, as well as some of their basic properties. """
@@ -68,11 +74,6 @@ try:
         stellar_file = "bpass_2.2.1_bin_imf135_300_stellar_grids.fits"
     else:
         stellar_file = "bc03_miles_stellar_grids.fits"
-        
-    if BPASS:
-        electron_density = 1000 #cm^-3, H-alpha density
-    else:
-        electron_density = 100 #cm^-3, H-alpha density
 
     # The metallicities of the stellar grids in units of Z_Solar
     if BPASS:
@@ -125,6 +126,7 @@ try:
     else:
         neb_cont_file = "bc03_miles_nebular_cont_grids.fits"
         neb_line_file = "bc03_miles_nebular_line_grids.fits"
+    
 
     # Names for the emission features to be tracked.
     line_names = np.loadtxt(grid_dir + "/cloudy_lines.txt",
@@ -140,9 +142,10 @@ try:
     # Wavelengths for the nebular continuum grids.
     neb_wavs = fits.open(grid_dir + "/" + neb_cont_file)[1].data[0, 1:]
 
-    # LogU values for the nebular emission grids.
+    # LogU values for the nebular emission grids        
     if BPASS:
         logU = np.arange(-4., 1.0, 0.5)
+        densities = np.array([100.,1000.])
     else:
         logU = np.arange(-4., 1.0, 0.5)
 

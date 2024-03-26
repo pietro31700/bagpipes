@@ -372,6 +372,8 @@ class model_galaxy(object):
 
         if self.nebular:
             grid = np.copy(self.sfh.ceh.grid)
+            if not "n_e" in list(model_comp["nebular"]):
+                model_comp["nebular"]["n_e"] = 100. #HII density cm^-3
 
             if "metallicity" in list(model_comp["nebular"]):
                 nebular_metallicity = model_comp["nebular"]["metallicity"]
@@ -384,12 +386,14 @@ class model_galaxy(object):
                 grid = self.neb_sfh.ceh.grid
 
             em_lines += self.nebular.line_fluxes(grid, t_bc,
-                                                 model_comp["nebular"]["logU"])
+                                                 model_comp["nebular"]["logU"],
+                                                 model_comp["nebular"]["n_e"])
 
             # All stellar emission below 912A goes into nebular emission
             spectrum_bc[self.wavelengths < 912.] = 0.
             spectrum_bc += self.nebular.spectrum(grid, t_bc,
-                                                 model_comp["nebular"]["logU"])
+                                                 model_comp["nebular"]["logU"],
+                                                 model_comp["nebular"]["n_e"])
 
         # Add attenuation due to stellar birth clouds.
         if self.dust_atten:
