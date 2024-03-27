@@ -184,7 +184,6 @@ class nebular(object):
                 )
 
                 sfh_ceh[:, index - 1] /= weight
-            print(density_weight,logU_weight)
         spectrum = (
             spectrum_low_logU_low_density *logU_weight * density_weight
             + spectrum_low_logU_high_density * logU_weight * (1-density_weight)

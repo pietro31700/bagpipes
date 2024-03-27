@@ -215,21 +215,13 @@ def make_cloudy_input_file(age, zmet, logU, density, path):
 
 def run_cloudy_model(age, zmet, logU, density, path):
     """ Run an individual cloudy model. """
-    filename = path + "/cloudy_temp_files/"\
-                             + "density_" + "%.0f" % density\
-                             + "/"\
-                             + "logU_" + "%.1f" % logU + "_zmet_"\
-                             + "%.3f" % zmet + "/" + "%.5f" % age + ".econ"
-                             
-    if not os.path.exists(filename):
+    make_cloudy_sed_file(age, zmet)
+    make_cloudy_input_file(age, zmet, logU, density, path)
+    os.chdir(path + "/cloudy_temp_files/"+ "density_" + "%.0f" % density + "/"
+            + "logU_" + "%.1f" % logU + "_zmet_" + "%.3f" % zmet)
 
-        make_cloudy_sed_file(age, zmet)
-        make_cloudy_input_file(age, zmet, logU, density, path)
-        os.chdir(path + "/cloudy_temp_files/"+ "density_" + "%.0f" % density + "/"
-                + "logU_" + "%.1f" % logU + "_zmet_" + "%.3f" % zmet)
-
-        os.system(cloudy_exe + " -r " + "%.5f" % age)
-        os.chdir("../../..")
+    os.system(cloudy_exe + " -r " + "%.5f" % age)
+    os.chdir("../../..")
 
 
 def extract_cloudy_results(age, zmet, logU, density, path):
@@ -419,18 +411,31 @@ def run_cloudy_grid(path=None):
                                 + "/"
                                 + "logU_" + "%.1f" % config.logU[i]
                                 + "_zmet_" + "%.3f" % config.metallicities[j])
-
+                        
+                
                 # Populate array of parameter values
                 for k in range(ages.shape[0]):
-
-                    params[n, 0] = ages[k]
-                    params[n, 1] = config.metallicities[j]
-                    params[n, 2] = config.logU[i]
-                    params[n, 3] = config.densities[l]
-                    n += 1
+                    
+                    age=ages[k]
+                    density = config.densities[l]
+                    zmet = config.metallicities[j]
+                    logU = config.logU[i]
+                    
+                    filename = path + "/cloudy_temp_files/"\
+                             + "density_" + "%.0f" % density\
+                             + "/"\
+                             + "logU_" + "%.1f" % logU + "_zmet_"\
+                             + "%.3f" % zmet + "/" + "%.5f" % age + ".econ"
+                             
+                    if not os.path.exists(filename):
+                        params[n, 0] = age
+                        params[n, 1] = zmet
+                        params[n, 2] = logU
+                        params[n, 3] = density
+                        n += 1
 
     # Assign models to cores
-    thread_nos = mpi_split_array(np.arange(n_models))
+    thread_nos = mpi_split_array(np.arange(n))
 
     # Run models assigned to this core
     for n in thread_nos:
