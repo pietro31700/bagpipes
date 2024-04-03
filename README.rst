@@ -32,7 +32,7 @@ To fit models to data with the code you will also need to install the `MultiNest
 
 
 The custom branch present the following changes from the original package:
--------------------------------------------------------------------------
+--------------------------------------------------------------------------
 
 + The nebular grids are built for logU up to +0.5, and max_redshift=15.
 
