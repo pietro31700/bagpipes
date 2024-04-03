@@ -1,6 +1,3 @@
-.. role:: raw-math(raw)
-    :format: latex html
-
 Bayesian Analysis of Galaxies for Physical Inference and Parameter EStimation
 =============================================================================
 
@@ -11,17 +8,17 @@ Installation
 
 If bagpipes was previously installed please uninstall it:
 
-.. code-block:: bash
+.. code-block::
 
     pip uninstall bagpipes
 
 Custom bagpipes must be installed in the following way (linux & mac):
 
 Go into the directory where you want to install bagpipes, download this file:
-`Grids file <https://mega.nz/file/U65QWByS#WhU0ScTbRoO0wWeVt7ZAxJh9Iom_IOjGUV1RO2U6SCM>`_
+`Grids file <https://mega.nz/file/di5FCTgI#M8-v6kFjj_aHanPqPLWC6XafvPtZyCWz1NLK9Deg5VI>`_
 than run the following commands:
 
-.. code-block:: bash
+.. code-block::
 
     git clone https://github.com/pietro31700/bagpipes.git
     tar -xvf grids.tar.gz -C ./bagpipes/bagpipes/models/
@@ -44,7 +41,7 @@ The custom branch present the following changes from the original package:
 
     + **step**: This is simply a step function with each step independent from the others. The steps edges are defined by you, than for each step you need to select the prior on the star formation rate. An example with uniform priors is the following
 
-      .. code-block:: python
+      .. code-block::
 
         step = {}
         step["metallicity"] = (0.05,0.3)
@@ -60,7 +57,7 @@ The custom branch present the following changes from the original package:
 
     + **relative_step**: This is similar to step, but each bin of star formation is relative to the SFR of the first bin (the newest star formation). In this case "massformed" is required as always
 
-      .. code-block:: python
+      .. code-block::
 
         rel_step = {}
         rel_step["metallicity"] = (0.05,0.3)
@@ -77,7 +74,7 @@ The custom branch present the following changes from the original package:
 
     + "hyperbolic" can be used to overpopulate low values and keeping a flat distribution elsewhere. "hyperbolic" has a parameter "eta" which select the *knee* of the distribution. Above this value the distribution is almost flat, below there are more occurrences.
 
-      .. code-block:: python
+      .. code-block::
 
         step = {}
         step["bin_edges"] = isolight_steps(n_bins=10,redshift=8,redshift_end=30)
@@ -94,13 +91,13 @@ The custom branch present the following changes from the original package:
   + you can select if also to plot the mean SFR value (instead of only the median SFR + 1σ CI) and if plot the SFH in log scale (both x and y axis)
     ``plot_sfh_posterior]`` has three new boolean parameters: ``mean``, ``log_x`` and ``log_y``. For enabling the new options use:
 
-    .. code-block:: python
+    .. code-block::
 
       plot_sfh_posterior(save=True,show=False,log_x=True,log_y=True,mean=True)
     
   + By default the x-axis is written as lookback time from the time of the galaxy. To revert this option use:
       
-    .. code-block:: python
+    .. code-block::
 
       plot_sfh_posterior(save=True,show=False,from_bigbang=True)
 
@@ -111,7 +108,7 @@ The custom branch present the following changes from the original package:
   + ``<h5 file>.attrs["parameter_names"]`` gives the ordered (as the samples2d in the same file) list of the names of the free parameters in the fit
   + ``<h5 file>.attrs["maxl_model"]`` gives the ready-to-use complete model of the galaxy as fitted. It is a dictionary. Import it with:
 
-    .. code-block:: python
+    .. code-block::
 
       maxl_params = eval(<h5 file>.attrs["maxl_model"].replace("array", "np.array").replace("float", "np.float"))
     
@@ -121,7 +118,7 @@ The custom branch present the following changes from the original package:
 
   + A new key has been introduced to allow to add noise to the spectrum.
 
-    .. code-block:: python
+    .. code-block::
 
      model_components["flux_sensitivity"] = np.c_[wavelengths,sensitivity]
 
