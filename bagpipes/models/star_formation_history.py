@@ -218,6 +218,17 @@ class star_formation_history:
 
         mask = (self.ages > age_min) & (self.ages < age_max)
         sfr[mask] += 1.
+    
+    def growing_exponential(self, sfr, param):
+    
+        age = self.age_of_universe-param["tstart"]*10**9
+        
+        tau = param["tau"]*10**9
+
+        t = age - self.ages[self.ages < age]
+
+        sfr[self.ages < age] = np.exp(t/tau)
+        
 
     def exponential(self, sfr, param):
 
@@ -225,7 +236,7 @@ class star_formation_history:
             age = param["age"]*10**9
 
         else:
-            age = (param["tstart"] - self.age_of_universe)*10**9
+            age = self.age_of_universe-param["tstart"]*10**9
 
         if "tau" in list(param):
             tau = param["tau"]*10**9
