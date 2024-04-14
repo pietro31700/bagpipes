@@ -421,21 +421,19 @@ def run_cloudy_grid(path=None):
                     zmet = config.metallicities[j]
                     logU = config.logU[i]
                     
-                    filename = path + "/cloudy_temp_files/"\
-                            + "density_" + "%.0f" % density\
-                            + "/"\
-                            + "logU_" + "%.1f" % logU + "_zmet_"\
-                            + "%.3f" % zmet + "/" + "%.5f" % age + ".econ"
-                            
+                    filename = (path + "/cloudy_temp_files/"
+                            + "density_" + "%.0f" % density
+                            + "/" #density folder
+                            + "logU_" + "%.1f" % logU + "_zmet_"
+                            + "%.3f" % zmet + "/" + "%.5f" % age + ".econ")
+                    print(filename)
+                    quit()  
                     if not os.path.exists(filename):
                         params[n, 0] = age
                         params[n, 1] = zmet
                         params[n, 2] = logU
                         params[n, 3] = density
                         n += 1
-                        print("a")
-                    else:
-                        print("b",flush=True)
 
     # Assign models to cores
     thread_nos = mpi_split_array(np.arange(n))
@@ -451,7 +449,7 @@ def run_cloudy_grid(path=None):
         print("n_e: " + str(np.round(density,0))
               + "logU: " + str(np.round(logU, 1)) + ", zmet: "
               + str(np.round(zmet, 4)) + ", age: "
-              + str(np.round(age*10**-9, 5))  + ", rank: " + rank,flush=True)
+              + str(np.round(age*10**-9, 5))  + ", rank: " + str(rank),flush=True)
 
         run_cloudy_model(age*10**-9, zmet, logU, density, path)
 
