@@ -413,26 +413,26 @@ def run_cloudy_grid(path=None):
                                 + "_zmet_" + "%.3f" % config.metallicities[j])
                         
                 
-                # Populate array of parameter values
-                for k in range(ages.shape[0]):
-                    
-                    age=ages[k]
-                    density = config.densities[l]
-                    zmet = config.metallicities[j]
-                    logU = config.logU[i]
-                    
-                    filename = path + "/cloudy_temp_files/"\
-                             + "density_" + "%.0f" % density\
-                             + "/"\
-                             + "logU_" + "%.1f" % logU + "_zmet_"\
-                             + "%.3f" % zmet + "/" + "%.5f" % age + ".econ"
-                             
-                    if not os.path.exists(filename):
-                        params[n, 0] = age
-                        params[n, 1] = zmet
-                        params[n, 2] = logU
-                        params[n, 3] = density
-                        n += 1
+                    # Populate array of parameter values
+                    for k in range(ages.shape[0]):
+                        
+                        age=ages[k]
+                        density = config.densities[l]
+                        zmet = config.metallicities[j]
+                        logU = config.logU[i]
+                        
+                        filename = path + "/cloudy_temp_files/"\
+                                + "density_" + "%.0f" % density\
+                                + "/"\
+                                + "logU_" + "%.1f" % logU + "_zmet_"\
+                                + "%.3f" % zmet + "/" + "%.5f" % age + ".econ"
+                                
+                        if not os.path.exists(filename):
+                            params[n, 0] = age
+                            params[n, 1] = zmet
+                            params[n, 2] = logU
+                            params[n, 3] = density
+                            n += 1
 
     # Assign models to cores
     thread_nos = mpi_split_array(np.arange(n))
