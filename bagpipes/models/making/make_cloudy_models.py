@@ -425,9 +425,8 @@ def run_cloudy_grid(path=None):
                             + "density_" + "%.0f" % density
                             + "/" #density folder
                             + "logU_" + "%.1f" % logU + "_zmet_"
-                            + "%.3f" % zmet + "/" + "%.5f" % age + ".econ")
+                            + "%.3f" % zmet + "/" + "%.5f" % age*10**-9 + ".econ")
                     print(filename)
-                    quit()  
                     if not os.path.exists(filename):
                         params[n, 0] = age
                         params[n, 1] = zmet
