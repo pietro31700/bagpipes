@@ -433,6 +433,9 @@ def run_cloudy_grid(path=None):
                         params[n, 2] = logU
                         params[n, 3] = density
                         n += 1
+                        print("a")
+                    else:
+                        print("b",flush=True)
 
     # Assign models to cores
     thread_nos = mpi_split_array(np.arange(n))
