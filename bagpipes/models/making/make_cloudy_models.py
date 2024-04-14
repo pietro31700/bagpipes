@@ -436,8 +436,7 @@ def run_cloudy_grid(path=None):
 
     # Assign models to cores
     thread_nos = mpi_split_array(np.arange(n))
-    print(rank,n,thread_nos)
-    quit()
+    print("n, rank", n, rank, flush=True)
 
     # Run models assigned to this core
     for n in thread_nos:
@@ -449,7 +448,7 @@ def run_cloudy_grid(path=None):
         print("n_e: " + str(np.round(density,0))
               + "logU: " + str(np.round(logU, 1)) + ", zmet: "
               + str(np.round(zmet, 4)) + ", age: "
-              + str(np.round(age*10**-9, 5)))
+              + str(np.round(age*10**-9, 5))  + ", rank: " + rank,flush=True)
 
         run_cloudy_model(age*10**-9, zmet, logU, density, path)
 
