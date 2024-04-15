@@ -453,7 +453,7 @@ def run_cloudy_grid(path=None):
         run_cloudy_model(age*10**-9, zmet, logU, density, path)
 
     # Combine arrays of models assigned to cores, checks all is finished
-    mpi_combine_array(thread_nos, n_models)
+    mpi_combine_array(thread_nos, n)
 
     # Put the final grid fits files together
     if rank == 0:
