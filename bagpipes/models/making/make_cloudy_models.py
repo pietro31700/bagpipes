@@ -88,7 +88,7 @@ def mpi_combine_array(core_array, total_len):
 
         if rank == 0:
             array = np.zeros([total_len] + list(core_array.shape[1:]))
-            array[:core_array.shape[0], ...] = core_array
+            array[:core_array.shape[0]+1, ...] = core_array
 
             for i in range(1, remainder):
                 start = i*(n_per_core+1)
