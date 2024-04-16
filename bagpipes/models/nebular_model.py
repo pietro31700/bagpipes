@@ -72,7 +72,7 @@ class nebular(object):
                             left=0,
                             right=0,
                         )
-
+        print("Grids loaded !")
         # Add the nebular lines to the resampled nebular continuum grid.
         for i in range(config.line_wavs.shape[0]):
             line_wav_shift = config.line_wavs[i] * (1 + (self.velshift / (3 * 10**5)))

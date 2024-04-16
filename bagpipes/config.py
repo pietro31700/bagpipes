@@ -4,6 +4,7 @@ import os
 import numpy as np
 
 from astropy.io import fits
+import fitsio
 
 from .utils import *
 from .models.making import igm_inoue2014
@@ -57,12 +58,6 @@ age_widths = age_bins[1:] - age_bins[:-1]
 
 # Convert the age sampling from log10(Gyr) to Gyr.
 age_sampling = 10**age_sampling
-
-"""This variable tell at which density build new nebular grids (it requires cloudy)"""
-if BPASS:
-    electron_density = 1000 #cm^-3, H-alpha density
-else:
-    electron_density = 100 #cm^-3, H-alpha density
 
 
 """ These variables tell the code where to find the raw stellar emission
@@ -150,12 +145,15 @@ try:
         logU = np.arange(-4., 1.0, 0.5)
 
     # Grid of line fluxes.
-    line_grid = [fits.open(grid_dir + "/" + neb_line_file)[i].data for
-                 i in range(len(metallicities) * len(logU) + 1)]
+    print("Loading line grids")
+    line_grid = [fitsio.read(grid_dir + "/" + neb_line_file,ext = i) for
+                 i in range(len(metallicities) * len(logU) * len(densities) + 1)]
 
+    print("Loading cont grids")
     # Grid of nebular continuum fluxes.
-    cont_grid = [fits.open(grid_dir + "/" + neb_cont_file)[i].data for
-                 i in range(len(metallicities) * len(logU) + 1)]
+    cont_grid = [fitsio.read(grid_dir + "/" + neb_cont_file,ext=i) for
+                 i in range(len(metallicities) * len(logU) * len(densities) + 1)]
+    print("Grids loaded")
 
 except IOError:
     print("Failed to load nebular grids, these should be placed in the"
