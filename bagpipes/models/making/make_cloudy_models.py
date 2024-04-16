@@ -31,7 +31,7 @@ except ImportError:
     rank = 0
     size = 1
 
-age_lim = 3.*10**7
+age_lim = 1.5*10**7
 
 
 """ This code is only necessary for making new sets of cloudy nebular

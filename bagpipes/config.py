@@ -46,7 +46,7 @@ if these variables are changed. """
 
 # Sets the default age sampling for stellar models in log10(Gyr).
 # Beware: if you change this you need to recompute the nebular models.
-age_sampling = np.arange(6., np.log10(cosmo.age(0.).value) + 9., 0.1)
+age_sampling = np.append([6.4,6.9,7.1],np.arange(7.2, np.log10(cosmo.age(0.).value) + 9., 0.1))
 
 # Set up edge positions for age bins for stellar + nebular models.
 age_bins = 10**make_bins(age_sampling, make_rhs=True)[0]
@@ -72,9 +72,7 @@ try:
 
     # The metallicities of the stellar grids in units of Z_Solar
     if BPASS:
-        metallicities = np.array([10**-5, 10**-4, 0.001, 0.002, 0.003, 0.004,
-                              0.006, 0.008, 0.010, 0.014, 0.020, 0.030,
-                              0.040])/0.02
+        metallicities = np.array([5.0e-03, 5.0e-02, 1.0e-01, 4.0e-01, 1.0e+00])
     else:
         metallicities = np.array([0.005, 0.02, 0.2, 0.4, 1., 2.5, 5.])
     
