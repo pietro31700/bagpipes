@@ -48,7 +48,7 @@ class nebular(object):
                 config.neb_ages.shape[0],
             )
         )
-
+        
         for i in range(config.metallicities.shape[0]):
             for j in range(config.logU.shape[0]):
                 for l in range(config.densities.shape[0]):

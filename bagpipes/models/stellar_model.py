@@ -126,7 +126,9 @@ class stellar(object):
 
         index = config.age_bins[config.age_bins < t_bc].shape[0]
         old_weight = (config.age_bins[index] - t_bc)/config.age_widths[index-1]
-
+        if old_weight==0:
+            old_weight=1.e-6
+        
         if index == 0:
             index += 1
 
