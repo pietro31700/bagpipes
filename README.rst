@@ -21,7 +21,7 @@ than run the following commands:
 .. code-block::
 
     git clone https://github.com/pietro31700/bagpipes.git
-    tar -xvf grids.tar.gz -C ./bagpipes/bagpipes/models/
+    tar -xvf grids.tar.gz -C ./bagpipes/bagpipes/models/grids/
     pip install ./bagpipes/
 
 
