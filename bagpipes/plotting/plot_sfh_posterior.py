@@ -12,7 +12,6 @@ except RuntimeError:
 from .general import *
 
 from .. import utils
-from .. import config
 
 
 def plot_sfh_posterior(fit, show=False, save=True, log_x=False, log_y=False, mean=False,from_bigbang=False, colorscheme="bw"):
@@ -58,6 +57,11 @@ def add_sfh_posterior(fit, ax, log_x=False, log_y=False, mean=False, from_bigban
         color1 = "dodgerblue"
         color2 = "dodgerblue"
         alpha = 0.7
+
+    if colorscheme == "green":
+        color1 = "green"
+        color2 = "green"
+        alpha = 0.4
 
     # Calculate median redshift and median age of Universe
     if "redshift" in fit.fitted_model.params:
