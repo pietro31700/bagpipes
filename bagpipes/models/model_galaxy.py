@@ -403,33 +403,34 @@ class model_galaxy(object):
         if self.dust_atten:
             dust_flux = 0.  # Total attenuated flux for energy balance.
 
-            # Add extra attenuation to birth clouds.
+            # Add attenuation to birth clouds.
             eta = 1.
             if "eta" in list(model_comp["dust"]):
                 eta = model_comp["dust"]["eta"]
-                bc_Av_reduced = (eta - 1.)*model_comp["dust"]["Av"]
-                bc_trans_red = 10**(-bc_Av_reduced*self.dust_atten.A_cont/2.5)
-                spectrum_bc_dust = spectrum_bc*bc_trans_red
-                dust_flux += np.trapz(spectrum_bc - spectrum_bc_dust,
-                                      x=self.wavelengths)
-
-                spectrum_bc = spectrum_bc_dust
-
-            # Attenuate emission line fluxes.
+            
+            # Attenuate the birth cloud
             bc_Av = eta*model_comp["dust"]["Av"]
+            bc_trans_red = 10**(-bc_Av*self.dust_atten.A_cont/2.5)
+            spectrum_bc_dust = spectrum_bc* bc_trans_red
+            dust_flux += np.trapz(spectrum_bc - spectrum_bc_dust,
+                                  x=self.wavelengths)
+            
+            spectrum_bc = spectrum_bc_dust
+            self.spectrum_bc = spectrum_bc
+
+            # Attenuate emission line fluxes
             em_lines *= 10**(-bc_Av*self.dust_atten.A_line/2.5)
 
-        spectrum += spectrum_bc  # Add birth cloud spectrum to spectrum.
-
-        # Add attenuation due to the diffuse ISM.
-        if self.dust_atten:
+            #now act on the old population
             trans = 10**(-model_comp["dust"]["Av"]*self.dust_atten.A_cont/2.5)
             dust_spectrum = spectrum*trans
             dust_flux += np.trapz(spectrum - dust_spectrum, x=self.wavelengths)
 
             spectrum = dust_spectrum
-            self.spectrum_bc = spectrum_bc*trans
 
+        spectrum += spectrum_bc  # Add birth cloud spectrum to spectrum.
+
+        if self.dust_atten:
             # Add dust emission.
             qpah, umin, gamma = 2., 1., 0.01
             if "qpah" in list(model_comp["dust"]):
