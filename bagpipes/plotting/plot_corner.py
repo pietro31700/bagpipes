@@ -60,7 +60,7 @@ def plot_corner(fit, show=False, save=True, bins=25, type="fit_params"):
             j += 1
 
             if tex_on:
-                labels[i] = "$t_{" + str(t_percentile) + "}\ /\ \mathrm{Gyr}$"
+                labels[i] = "$t_{" + str(t_percentile) + "}\\ /\\ \\mathrm{Gyr}$"
 
             else:
                 labels[i] = "t" + str(t_percentile) + " / Gyr"
