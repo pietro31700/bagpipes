@@ -34,7 +34,7 @@ class posterior(object):
         The number of posterior samples to generate for each quantity.
     """
 
-    def __init__(self, galaxy, run=".", n_samples=500):
+    def __init__(self, galaxy, run=".", n_samples=np.nan):
 
         self.galaxy = galaxy
         self.run = run
@@ -61,13 +61,12 @@ class posterior(object):
         self.samples2d = np.array(file["samples2d"])
 
         # If fewer than n_samples exist in posterior, reduce n_samples
-        if self.samples2d.shape[0] < self.n_samples:
+        if np.isnan(self.n_samples) or self.samples2d.shape[0] < self.n_samples:
             self.n_samples = self.samples2d.shape[0]
 
         # Randomly choose points to generate posterior quantities
         self.indices = np.random.choice(self.samples2d.shape[0],
                                         size=self.n_samples, replace=False)
-
         self.samples = {}  # Store all posterior samples
 
         dirichlet_comps = []  # Do any parameters follow Dirichlet dist

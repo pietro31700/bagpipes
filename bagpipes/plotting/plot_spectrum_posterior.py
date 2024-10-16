@@ -122,3 +122,146 @@ def add_spectrum_posterior(fit, ax, zorder=4, y_scale=None):
     ax.plot(wavs, post[:, 1], color="sandybrown", zorder=zorder, lw=1.5)
     ax.fill_between(wavs, post[:, 0], post[:, 2], color="sandybrown",
                     zorder=zorder, alpha=0.75, linewidth=0)
+
+
+def plot_spectrum_beautiful(fit, line_close_up =False, show=False, save=True):
+    fit.posterior.get_advanced_quantities()
+
+    plt.rcParams['text.usetex'] = True
+    plt.rcParams.update({"font.size":17})
+
+    wavs = fit.galaxy.spectrum[:, 0]
+    spec_post = np.copy(fit.posterior.samples["spectrum"])
+
+    if "calib" in list(fit.posterior.samples):
+        spec_post /= fit.posterior.samples["calib"]
+
+    if "noise" in list(fit.posterior.samples):
+        spec_post += fit.posterior.samples["noise"]
+
+    # Calculate median redshift
+    if "redshift" in fit.fitted_model.params:
+        redshift = np.median(fit.posterior.samples["redshift"])
+
+    else:
+        redshift = fit.fitted_model.model_components["redshift"]
+
+    
+    post = np.percentile(spec_post, (16, 50, 84), axis=0).T
+
+    ymax = 1.2*np.max(post[:, 1])
+    y_scale = float(int(np.log10(ymax))-1)
+
+    colorDATA = "#000000"
+    colorERROR = "#8ebad9"
+    colorFIT = "#ed2024"
+
+    fig, axes = plt.subplots(2,1,figsize=(9, 5.5),sharex=True,height_ratios=(3,1))
+    fig.subplots_adjust(hspace=0)
+    plt.subplot(211)
+    for jj in range(2):
+        axes[jj].yaxis.set_ticks_position('both')
+        axes[jj].xaxis.set_ticks_position('both')
+        axes[jj].tick_params(axis="both", direction='in', which="major",length=5,zorder=10)
+        axes[jj].tick_params(axis="both", direction='in', which="minor",length=2,zorder=10)
+
+    l_data1, = axes[0].step(fit.galaxy.spectrum[:,0],fit.galaxy.spectrum[:,1]/10**y_scale, label="Data",color=colorDATA,where="mid",alpha=1,lw=1)
+    l_data2 = axes[0].fill_between(fit.galaxy.spectrum[:,0],(fit.galaxy.spectrum[:,1]-fit.galaxy.spectrum[:,2])/10**y_scale,(fit.galaxy.spectrum[:,1]+fit.galaxy.spectrum[:,2])/10**y_scale,color=colorERROR,alpha=1,step="mid",lw=0)
+    
+    l_fit1, = axes[0].step(fit.galaxy.spectrum[:,0], post[:, 1]/10**y_scale, color=colorFIT, label="SED fitting",alpha=0.9,lw=1.5,where="mid")
+    
+    legend  = axes[0].legend([(l_data2, l_data1), l_fit1], ["NIRSpec data", "SED best-fit"],frameon=True,loc="upper left",fontsize=14)
+    legend.get_frame().set_linewidth(0.0)
+    legend.get_frame().set_alpha(0.4)
+
+    lines = {
+        "Civ": {"wl0": 1549, "tex": r"$\textsc{C\,iv}$"},
+        "Ciii": {"wl0": 1908, "tex": r"$\textsc{C\,iii]}$"},
+        "Mgii": {"wl0": 2798, "tex": r"$\textsc{M{\rm g}\,ii}$","offset":0.1},
+        "Oii": {"wl0": 3727, "tex": r"$\textsc{[O\,ii]}$"},
+        "Hd": {"wl0": 4101.2, "tex": r"$\rm H\delta$", "offset": 0.2},
+        "Hgamma": {"wl0": 4340, "tex": r"$\rm H\gamma$", "offset": 0.1},
+        "Hbeta": {"wl0": 4861.3, "tex": r"$\rm H\beta$"},
+        "OIIIb": {"wl0": 4958.9, "tex": r"$\textsc{[O\,iii]}$"},
+        "OIIIa": {"wl0": 5006.8, "tex": r"$\textsc{[O\,iii]}$"},
+        "Halpha": {"wl0": 6562.8, "tex": r"$\rm H\alpha$"},
+        "SIIa": {"wl0": 6720, "tex": r"$\textsc{[S\,ii]}$"},
+        "SIIb": {"wl0": 6733, "tex": r""},
+        "SIIIa": {"wl0": 9075, "tex": r"$\textsc{[S\,iii]}$"},
+        "SIIIb": {"wl0": 9535, "tex": r"$\textsc{[S\,iii]}$"},
+        "HeI": {"wl0": 10836, "tex": r"$\textsc{H{\rm e}\,i}$"},
+        "Pagamma": {"wl0": 10944, "tex": r"$\rm Pa\gamma$", "offset": 0.3},
+        "Feiia": {"wl0": 12574, "tex": r"$\textsc{[F{\rm e}\,ii]}$"},
+        "Pabeta": {"wl0": 12824, "tex": r"$\rm Pa\beta$"},
+        "Feiib": {"wl0": 16444, "tex": r"$\textsc{[F{\rm e}\,ii]}$"},
+        "Paalpha": {"wl0": 18760, "tex": r"$\rm Pa\alpha$"},
+    }
+
+    if line_close_up==False:
+        axes[0].set_xlim(fit.galaxy.spectrum[0,0],fit.galaxy.spectrum[-1,0])
+    else:
+
+        wl_c = lines[line_close_up]["wl0"]* (1+redshift)
+        lims_x = (max(wl_c*0.75,fit.galaxy.spectrum[0,0]),min(wl_c*1.25,fit.galaxy.spectrum[-1,0]))
+        in_x_lim = (fit.galaxy.spectrum[:,0] > lims_x[0]) *  (fit.galaxy.spectrum[:,0] < lims_x[1])
+        axes[0].set_xlim(lims_x)
+        y_max_spectrum  = np.maximum(post[:, 1],fit.galaxy.spectrum[:,1])/10**y_scale
+        axes[0].set_ylim( 0.9*y_max_spectrum[in_x_lim].min(), 1.2*y_max_spectrum[in_x_lim].max()) 
+
+
+    lines = list(lines.values())
+    means_p = [lines[ii]["wl0"] * (1+redshift) for ii in range(len(lines))]
+
+    heigh_name_line = [0.1+((fit.galaxy.spectrum[:,1]/10**y_scale)[np.argmin(np.abs(means_p[jj]-fit.galaxy.spectrum[:,0]))]) for jj in range(len(means_p))]
+    for ii in range(len(lines)):
+        if means_p[ii]>1.05*fit.galaxy.spectrum[2,0] and  means_p[ii]<0.95*fit.galaxy.spectrum[-1,0]:
+            axes[0].axvline(means_p[ii],ls="--",color="k",alpha=0.5,linewidth=1)
+            if "offset" in lines[ii].keys():
+                position = heigh_name_line[ii] + lines[ii]["offset"]*(max(heigh_name_line)-min(heigh_name_line))
+            else:
+                position = heigh_name_line[ii]
+            t = axes[0].text(means_p[ii],position,lines[ii]["tex"],rotation='vertical',fontsize=13,ha='right',va="bottom",clip_on=True)#,clip_box = Bbox([[0,0], [axes[0].get_xlim()[1],1.2*axes[0].get_ylim()[1]]]))
+            t.set_bbox(dict(facecolor='white', alpha=0.5,lw=0))
+
+
+
+
+    ylim_now = axes[0].get_ylim()
+    axes[0].set_ylim(top = ymax/10**y_scale)
+    if ylim_now[0]<0:
+        axes[0].set_ylim(bottom = 0)
+
+
+    axes[1].axhline(0,ls="--",alpha=0.5,color="k")
+    relative_errors = (fit.galaxy.spectrum[:,1]-post[:, 1])/fit.galaxy.spectrum[:,2]
+    axes[1].set_ylabel(r"$\chi$",fontsize=15)
+    axes[1].scatter(fit.galaxy.spectrum[:,0], relative_errors,color="k",marker=".",s=5,alpha=0.5)
+    if not line_close_up:
+        y_lim = np.percentile(relative_errors,[1,99])
+        if y_lim[0]>-5 and y_lim[1]<5:
+            axes[1].set_yticks([-3,0,3])
+            axes[1].set_ylim((-5,5))
+        else:
+            axes[1].set_ylim(y_lim)
+    else:
+        axes[1].plot(fit.galaxy.spectrum[:,0], relative_errors,color=colorERROR,alpha=0.25,lw=1)
+        axes[1].set_ylim(1.1*relative_errors[in_x_lim].min(),1.1*relative_errors[in_x_lim].max())
+
+    axes[0].set_ylabel("$\\mathrm{f_{\\lambda}}\\ \\mathrm{/\\ 10^{"
+                                + str(int(y_scale))
+                                + "}\\ erg\\ s^{-1}\\ cm^{-2}\\ \\AA^{-1}}$",fontsize=15)
+    axes[0].set_xlabel(r"$\lambda\,\rm[\AA]$")
+
+    if save:
+        if not line_close_up:
+            plotpath = "pipes/plots/" + fit.run + "/" + fit.galaxy.ID + "_fit_b.pdf"
+        else:
+            plotpath = "pipes/plots/" + fit.run + "/" + fit.galaxy.ID + "_fit_b_" + line_close_up+ ".pdf"
+        fig.savefig(plotpath, bbox_inches="tight")
+        plt.close(fig)
+
+    if show:
+        plt.show()
+        plt.close(fig)
+
+    return fig, axes

@@ -112,6 +112,7 @@ class fit(object):
 
             #if rank == 0:
             print("\nResults loaded from " + self.fname[:-1] + ".h5\n")
+            file.close()
 
         # Set up the model which is to be fitted to the data.
         self.fitted_model = fitted_model(galaxy, self.fit_instructions,
@@ -298,6 +299,9 @@ class fit(object):
 
     def plot_spectrum_posterior(self, show=False, save=True):
         return plotting.plot_spectrum_posterior(self, show=show, save=save)
+    
+    def plot_spectrum_beautiful(self, line_close_up=False, show=False, save=True):
+        return plotting.plot_spectrum_beautiful(self, line_close_up= line_close_up, show=show, save=save)
 
     def plot_calibration(self, show=False, save=True):
         return plotting.plot_calibration(self, show=show, save=save)

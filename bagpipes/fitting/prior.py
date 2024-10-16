@@ -76,6 +76,15 @@ class prior(object):
                                      self.hyper_params[i])
 
         return cube
+    
+    def discrete(self,value,limits,hyper_params):
+        n_step = hyper_params["n"]
+
+        value = ((value * n_step)//1)/n_step
+
+        value = limits[0] + (limits[1] - limits[0])*value
+
+        return value
 
     def uniform(self, value, limits, hyper_params):
         """ Uniform prior in x where x is the parameter. """
