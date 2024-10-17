@@ -120,7 +120,7 @@ class fit(object):
 
     def fit(self, verbose=False, n_live=400, use_MPI=True,
             sampler="multinest", n_eff=0, discard_exploration=False,
-            n_networks=4, pool=1):
+            n_networks=4, pool=1, n_like_max = np.inf):
         """ Fit the specified model to the input galaxy data.
 
         Parameters
@@ -132,6 +132,8 @@ class fit(object):
         n_live : int - optional
             Number of live points: reducing speeds up the code but may
             lead to unreliable results.
+
+        n_like_max: nautilus maximum likelihood evaluations
 
         sampler : string - optional
             The sampler to use. Available options are "multinest" and
@@ -204,7 +206,7 @@ class fit(object):
                                     filepath=self.fname + ".h5")
 
                 n_sampler.run(verbose=verbose, n_eff=n_eff,
-                              discard_exploration=discard_exploration)
+                              discard_exploration=discard_exploration, n_like_max = n_like_max)
 
             os.environ["PYTHONWARNINGS"] = ""
 
