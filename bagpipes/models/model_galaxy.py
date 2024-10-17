@@ -543,7 +543,7 @@ class model_galaxy(object):
             flux_sensitivity = np.interp(self.spec_wavs,wl_sensitivity,flux_sensitivity)
             
             spectrum = spectres.spectres(self.spec_wavs, redshifted_wavs,
-                                        spectrum, fill=0)
+                                        spectrum, fill=0, verbose=False)
             spectrum_err = np.random.normal(0,flux_sensitivity)/1.e20
             spectrum=spectrum+spectrum_err
             
@@ -582,7 +582,7 @@ class model_galaxy(object):
         
         if not wavs_are_spec_wavs:
             fluxes = spectres.spectres(self.spec_wavs, redshifted_wavs,
-                                   spectrum, fill=0)
+                                   spectrum, fill=0, verbose=False)
 
         if self.spec_units == "mujy":
             fluxes /= ((10**-29*2.9979*10**18/self.spec_wavs**2))
