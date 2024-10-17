@@ -65,10 +65,19 @@ def plot_corner(fit, show=False, save=True, bins=25, type="fit_params"):
             else:
                 labels[i] = "t" + str(t_percentile) + " / Gyr"
 
-    # Make the corner plot
+    # Make the corner plot (copied from corner package)
+    factor = 2.0  # size of one side of one panel
+    lbdim = 0.5 * factor  # size of left/bottom margin
+    trdim = 0.2 * factor  # size of top/right margin
+    whspace = 0.05  # w/hspace size
+    plotdim = factor * len(labels) + factor * (len(labels) - 1.0) * whspace
+    dim = lbdim + plotdim + trdim
+
+    # Create a new figure if one wasn't provided.
+    fig= plt.figure(figsize=(dim, dim), num=1, clear=True)
     fig = corner.corner(samples, labels=labels, quantiles=[0.16, 0.5, 0.84],
                         show_titles=True, title_kwargs={"fontsize": 13},
-                        smooth=1., smooth1d=1., bins=bins)
+                        smooth=1., smooth1d=1., bins=bins, fig=fig)
 
     # Save the corner plot to file
     if save:
@@ -76,11 +85,13 @@ def plot_corner(fit, show=False, save=True, bins=25, type="fit_params"):
                     + "_corner.pdf")
 
         plt.savefig(plotpath, bbox_inches="tight")
+        fig.clear()
         plt.close(fig)
 
     # Alternatively show the corner plot
     if show:
         plt.show()
+        fig.clear()
         plt.close(fig)
 
     return fig

@@ -32,6 +32,7 @@ latex_names = {"redshift": "z",
                "age": "\\mathrm{Age}",
                "age_min": "\\mathrm{Min\\ Age}",
                "age_max": "\\mathrm{Max\\ Age}",
+               "R_curve_multiplier": "R_{\\mathrm{mult}}",
                "Av": "{A_V}",
                "n": "n",
                "veldisp": "\\sigma_{vel}",
@@ -58,9 +59,11 @@ latex_names = {"redshift": "z",
                "tau_q": "\\tau_\\mathrm{quench}",
                "length": "l",
                "norm": "n",
+               "logU": "\\log U",
                "scaling": "s",
                "t_bc": "t_{BC}",
                "B": "B",
+               "eta": "\\eta",
                "delta": "\\delta"}
 
 latex_units = {"metallicity": "Z_{\\odot}",
@@ -86,7 +89,7 @@ latex_comps = {"dblplaw": "dpl",
                "constant": "const",
                "delayed": "del",
                "calibration": "calib",
-               "nebular": "neb",
+               "nebular": "",
                "lognormal": "lnorm",
                "iyer2019": "GP"}
 
@@ -241,7 +244,7 @@ def fix_param_names(fit_params):
             new_param = "$" + new_param + "$"
 
         else:
-            new_param = fit_param
+            new_param = "$\\mathrm{" + fit_param + "}$"
 
         new_params.append(new_param)
 

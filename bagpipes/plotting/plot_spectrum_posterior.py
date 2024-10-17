@@ -258,10 +258,12 @@ def plot_spectrum_beautiful(fit, line_close_up =False, show=False, save=True):
         else:
             plotpath = "pipes/plots/" + fit.run + "/" + fit.galaxy.ID + "_fit_b_" + line_close_up+ ".pdf"
         fig.savefig(plotpath, bbox_inches="tight")
+        fig.clear()
         plt.close(fig)
 
     if show:
         plt.show()
+        fig.clear()
         plt.close(fig)
 
     return fig, axes
